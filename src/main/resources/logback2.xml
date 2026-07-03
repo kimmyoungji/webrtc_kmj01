@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <property name="LOG_PATTERN" value="%logger{36} %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"/>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>
+                ${LOG_PATTERN}
+            </pattern>
+        </encoder>
+    </appender>
+
+	<!-- 로그 File에 저장 -->
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!-- <file>D:\\logs\\catalina.log</file> -->
+		<file>/home/rocky/data/file/logs/atc_pc_user.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- 일별로 로그파일이 생성된다. -->
+			<!-- LOCAL -->
+			<!-- <fileNamePattern>D:\\logs\\ming-%d{yyyy-MM-dd}.%i.log</fileNamePattern> -->
+			<fileNamePattern>/home/rocky/data/file/logs/atc_pc_user-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+			<!-- 5MB가 넘으면 새로운 로그파일이 생성된다. -->
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>50MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+			<!-- 10건의 파일만 남기고 지난 로그파일은 삭제 된다. -->
+			<maxHistory>10</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<Pattern>
+				${LOG_PATTERN}
+			</Pattern>
+		</encoder>
+	</appender>
+    
+    <logger name="o.a.k" level="info" />
+<!--     <logger name="io.lettuce" level="info" /> -->
+    <logger name="org.springframework" level="info" />
+    <logger name="com.atc" level="${error.mode}" />
+    <logger name="java.sql" level="off" />
+    <logger name="jdbc.sqlonly" level="${error.mode}" /> 
+    <logger name="jdbc.sqltiming" level="off" /> 
+    <logger name="jdbc.audit" level="off" /> 
+    <logger name="jdbc.resultset" level="off" /> 
+    <logger name="jdbc.resultsettable" level="off" />
+
+    <root level="${error.mode}">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
+    </root>
+    
+</configuration>

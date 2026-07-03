@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebRTC 비디오 채팅 - 시작</title>
+  <link href="modern.css" rel="stylesheet">
+  <link href="shared.css" rel="stylesheet">
+</head>
+<body>
+  <script>
+    /**
+     * index.html (홈페이지)
+     * 역할: 토큰 있으면 chat.html로, 없으면 login.html로 리다이렉트
+     */
+    window.addEventListener('DOMContentLoaded', () => {
+      const token = localStorage.getItem('jwtToken');
+      
+      if (token) {
+        // 토큰이 있으면 chat.html로 이동
+        console.log('[index.html] 유효한 토큰이 있습니다. chat.html로 리다이렉트합니다.');
+        window.location.href = 'chat.html';
+      } else {
+        // 토큰이 없으면 login.html로 이동
+        console.log('[index.html] 토큰이 없습니다. login.html로 리다이렉트합니다.');
+        window.location.href = 'login.html';
+      }
+    });
+  </script>
+  <div style="text-align: center; margin-top: 50px;">
+    <h1>WebRTC 비디오 채팅</h1>
+    <p>로딩 중...</p>
+  </div>
+</body>
+</html>

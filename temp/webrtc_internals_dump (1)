@@ -1,0 +1,363 @@
+{
+ "deviceMemory": 16,
+ "hardwareConcurrency": 10,
+ "timestamp": 1780805394289,
+ "getUserMedia": [
+  {
+   "audio": "",
+   "origin": "http://localhost:8090",
+   "pid": 45312,
+   "request_id": 0,
+   "request_type": "getUserMedia",
+   "rid": 32225,
+   "timestamp": 1780802915747.453,
+   "url": "http://localhost:8090/ocs/chat.html",
+   "video": "{\"advanced\": [{\"aspectRatio\": {\"min\": 1.33333}}, {\"aspectRatio\": {\"max\": 1.33333}}]}"
+  },
+  {
+   "audio_track_info": "{\"id\":\"1203f3ba-1420-4088-9e0f-6e45ff9d44e9\",\"label\":\"MacBook Pro 마이크 (Built-in)\"}",
+   "pid": 45312,
+   "request_id": 0,
+   "request_type": "getUserMedia",
+   "rid": 32225,
+   "stream_id": "8f619173-ec58-45ad-b25a-317528cd1764",
+   "timestamp": 1780802917099.234,
+   "video_track_info": "{\"id\":\"fc4e193a-3bf7-4dc8-a809-f3f5b930d7c5\",\"label\":\"FaceTime HD 카메라 (3A71:F4B5)\"}"
+  },
+  {
+   "audio": "",
+   "origin": "http://localhost:8090",
+   "pid": 45312,
+   "request_id": 1,
+   "request_type": "getUserMedia",
+   "rid": 32225,
+   "timestamp": 1780803461445.829,
+   "url": "http://localhost:8090/ocs/chat.html",
+   "video": "{\"advanced\": [{\"aspectRatio\": {\"min\": 1.33333}}, {\"aspectRatio\": {\"max\": 1.33333}}]}"
+  },
+  {
+   "audio_track_info": "{\"id\":\"73ebae82-7536-4bbf-ac3c-626a9e25a649\",\"label\":\"MacBook Pro 마이크 (Built-in)\"}",
+   "pid": 45312,
+   "request_id": 1,
+   "request_type": "getUserMedia",
+   "rid": 32225,
+   "stream_id": "e8f978bb-933a-48c7-ac82-6fa0441d5fc1",
+   "timestamp": 1780803462813.12,
+   "video_track_info": "{\"id\":\"46cf2c5a-4e06-4c24-826a-5b23e99e2688\",\"label\":\"FaceTime HD 카메라 (3A71:F4B5)\"}"
+  },
+  {
+   "audio": "",
+   "origin": "http://localhost:8090",
+   "pid": 45312,
+   "request_id": 2,
+   "request_type": "getUserMedia",
+   "rid": 32225,
+   "timestamp": 1780803974128.883,
+   "url": "http://localhost:8090/ocs/chat.html",
+   "video": "{\"advanced\": [{\"aspectRatio\": {\"min\": 1.33333}}, {\"aspectRatio\": {\"max\": 1.33333}}]}"
+  },
+  {
+   "audio_track_info": "{\"id\":\"d023af2f-7632-4dd7-8d0d-8a49832c390b\",\"label\":\"MacBook Pro 마이크 (Built-in)\"}",
+   "pid": 45312,
+   "request_id": 2,
+   "request_type": "getUserMedia",
+   "rid": 32225,
+   "stream_id": "a058eb05-8052-4fe0-bb8a-8ad1ad6794d8",
+   "timestamp": 1780803975478.515,
+   "video_track_info": "{\"id\":\"9642c51a-83d9-47e3-90f7-13b7115a6af5\",\"label\":\"FaceTime HD 카메라 (3A71:F4B5)\"}"
+  },
+  {
+   "audio": "",
+   "origin": "http://localhost:8090",
+   "pid": 45312,
+   "request_id": 3,
+   "request_type": "getUserMedia",
+   "rid": 32225,
+   "timestamp": 1780804452233.513,
+   "url": "http://localhost:8090/ocs/chat.html",
+   "video": "{\"advanced\": [{\"aspectRatio\": {\"min\": 1.33333}}, {\"aspectRatio\": {\"max\": 1.33333}}]}"
+  },
+  {
+   "audio_track_info": "{\"id\":\"3211362e-1004-4751-9691-a8e887651fbe\",\"label\":\"MacBook Pro 마이크 (Built-in)\"}",
+   "pid": 45312,
+   "request_id": 3,
+   "request_type": "getUserMedia",
+   "rid": 32225,
+   "stream_id": "c9350bb5-e61c-4ada-9e8b-42c9734e9a88",
+   "timestamp": 1780804453624.7,
+   "video_track_info": "{\"id\":\"dcf6dd4a-06a7-414a-aff1-c70c4e949ceb\",\"label\":\"FaceTime HD 카메라 (3A71:F4B5)\"}"
+  },
+  {
+   "audio": "",
+   "origin": "http://localhost:8090",
+   "pid": 45312,
+   "request_id": 4,
+   "request_type": "getUserMedia",
+   "rid": 32225,
+   "timestamp": 1780804574612.362,
+   "url": "http://localhost:8090/ocs/chat.html",
+   "video": "{\"advanced\": [{\"aspectRatio\": {\"min\": 1.33333}}, {\"aspectRatio\": {\"max\": 1.33333}}]}"
+  },
+  {
+   "audio_track_info": "{\"id\":\"19d24a5b-ec20-4fc2-bb9d-2f61541b710e\",\"label\":\"MacBook Pro 마이크 (Built-in)\"}",
+   "pid": 45312,
+   "request_id": 4,
+   "request_type": "getUserMedia",
+   "rid": 32225,
+   "stream_id": "b71747ff-58e6-4873-90ea-299f6d599fb1",
+   "timestamp": 1780804575984.002,
+   "video_track_info": "{\"id\":\"a0028121-4821-4e11-8c16-740b8c12c099\",\"label\":\"FaceTime HD 카메라 (3A71:F4B5)\"}"
+  },
+  {
+   "audio": "",
+   "origin": "http://localhost:8090",
+   "pid": 45312,
+   "request_id": 5,
+   "request_type": "getUserMedia",
+   "rid": 32225,
+   "timestamp": 1780804592376.106,
+   "url": "http://localhost:8090/ocs/chat.html",
+   "video": "{\"advanced\": [{\"aspectRatio\": {\"min\": 1.33333}}, {\"aspectRatio\": {\"max\": 1.33333}}]}"
+  },
+  {
+   "audio_track_info": "{\"id\":\"e27b0c38-5391-4172-9e52-479281058be1\",\"label\":\"MacBook Pro 마이크 (Built-in)\"}",
+   "pid": 45312,
+   "request_id": 5,
+   "request_type": "getUserMedia",
+   "rid": 32225,
+   "stream_id": "4fefad36-351d-469d-9945-e4807acd14a6",
+   "timestamp": 1780804593715.214,
+   "video_track_info": "{\"id\":\"6e76e3c1-c7c9-472e-b08e-35fbecce760a\",\"label\":\"FaceTime HD 카메라 (3A71:F4B5)\"}"
+  },
+  {
+   "audio": "",
+   "origin": "http://localhost:8090",
+   "pid": 45312,
+   "request_id": 6,
+   "request_type": "getUserMedia",
+   "rid": 32225,
+   "timestamp": 1780804665035.776,
+   "url": "http://localhost:8090/ocs/chat.html",
+   "video": "{\"advanced\": [{\"aspectRatio\": {\"min\": 1.33333}}, {\"aspectRatio\": {\"max\": 1.33333}}]}"
+  },
+  {
+   "audio_track_info": "{\"id\":\"421bec79-dd8b-451c-a402-6384f78795c2\",\"label\":\"MacBook Pro 마이크 (Built-in)\"}",
+   "pid": 45312,
+   "request_id": 6,
+   "request_type": "getUserMedia",
+   "rid": 32225,
+   "stream_id": "f1cb11ab-e388-406f-8656-53a8eec2c5b5",
+   "timestamp": 1780804666425.962,
+   "video_track_info": "{\"id\":\"08c526be-5a21-4157-a06c-6eb2ae038b49\",\"label\":\"FaceTime HD 카메라 (3A71:F4B5)\"}"
+  },
+  {
+   "audio": "",
+   "origin": "http://localhost:8090",
+   "pid": 45312,
+   "request_id": 7,
+   "request_type": "getUserMedia",
+   "rid": 32225,
+   "timestamp": 1780804724561.375,
+   "url": "http://localhost:8090/ocs/chat.html",
+   "video": "{\"advanced\": [{\"aspectRatio\": {\"min\": 1.33333}}, {\"aspectRatio\": {\"max\": 1.33333}}]}"
+  },
+  {
+   "audio_track_info": "{\"id\":\"e9669a43-27c4-438c-99c2-b774e2078c2d\",\"label\":\"MacBook Pro 마이크 (Built-in)\"}",
+   "pid": 45312,
+   "request_id": 7,
+   "request_type": "getUserMedia",
+   "rid": 32225,
+   "stream_id": "bbda3bf5-e793-4b85-9f1e-054913eb0703",
+   "timestamp": 1780804725890.593,
+   "video_track_info": "{\"id\":\"7de4a4ed-7fe0-44d6-a20c-3bd8861a6e01\",\"label\":\"FaceTime HD 카메라 (3A71:F4B5)\"}"
+  },
+  {
+   "audio": "",
+   "origin": "http://localhost:8090",
+   "pid": 45312,
+   "request_id": 8,
+   "request_type": "getUserMedia",
+   "rid": 32225,
+   "timestamp": 1780804818384.187,
+   "url": "http://localhost:8090/ocs/chat.html",
+   "video": "{\"advanced\": [{\"aspectRatio\": {\"min\": 1.33333}}, {\"aspectRatio\": {\"max\": 1.33333}}]}"
+  },
+  {
+   "audio_track_info": "{\"id\":\"8122c180-ff59-4078-954c-4d37a4f6cc5c\",\"label\":\"MacBook Pro 마이크 (Built-in)\"}",
+   "pid": 45312,
+   "request_id": 8,
+   "request_type": "getUserMedia",
+   "rid": 32225,
+   "stream_id": "2bffd813-fa32-480e-b83c-f44ddbf98908",
+   "timestamp": 1780804819713.214,
+   "video_track_info": "{\"id\":\"e2ea5b57-9eb5-4369-aaff-17aae6e2b3e9\",\"label\":\"FaceTime HD 카메라 (3A71:F4B5)\"}"
+  },
+  {
+   "audio": "",
+   "origin": "http://localhost:8090",
+   "pid": 45312,
+   "request_id": 9,
+   "request_type": "getUserMedia",
+   "rid": 32225,
+   "timestamp": 1780804874234.786,
+   "url": "http://localhost:8090/ocs/chat.html",
+   "video": "{\"advanced\": [{\"aspectRatio\": {\"min\": 1.33333}}, {\"aspectRatio\": {\"max\": 1.33333}}]}"
+  },
+  {
+   "audio_track_info": "{\"id\":\"be1a8988-bf38-4bd6-b677-2e39e59442b4\",\"label\":\"MacBook Pro 마이크 (Built-in)\"}",
+   "pid": 45312,
+   "request_id": 9,
+   "request_type": "getUserMedia",
+   "rid": 32225,
+   "stream_id": "8abefa80-4729-486a-acc9-b4cfe38e5f15",
+   "timestamp": 1780804875616.232,
+   "video_track_info": "{\"id\":\"2779abec-d68b-4f99-904c-20060ad97cce\",\"label\":\"FaceTime HD 카메라 (3A71:F4B5)\"}"
+  },
+  {
+   "audio": "",
+   "origin": "http://localhost:8090",
+   "pid": 45312,
+   "request_id": 10,
+   "request_type": "getUserMedia",
+   "rid": 32225,
+   "timestamp": 1780804891118.932,
+   "url": "http://localhost:8090/ocs/chat.html",
+   "video": "{\"advanced\": [{\"aspectRatio\": {\"min\": 1.33333}}, {\"aspectRatio\": {\"max\": 1.33333}}]}"
+  },
+  {
+   "audio_track_info": "{\"id\":\"8c1a68a8-6df5-49b5-8b06-448030d7f09d\",\"label\":\"MacBook Pro 마이크 (Built-in)\"}",
+   "pid": 45312,
+   "request_id": 10,
+   "request_type": "getUserMedia",
+   "rid": 32225,
+   "stream_id": "e03922b7-05ef-425c-9383-b41ebd97f139",
+   "timestamp": 1780804891461.094,
+   "video_track_info": "{\"id\":\"0c1e3d17-f3dd-463d-84d2-00baf70b25c8\",\"label\":\"FaceTime HD 카메라 (3A71:F4B5)\"}"
+  },
+  {
+   "audio": "",
+   "origin": "http://localhost:8090",
+   "pid": 45312,
+   "request_id": 11,
+   "request_type": "getUserMedia",
+   "rid": 32225,
+   "timestamp": 1780805042890.365,
+   "url": "http://localhost:8090/ocs/chat.html",
+   "video": "{\"advanced\": [{\"aspectRatio\": {\"min\": 1.33333}}, {\"aspectRatio\": {\"max\": 1.33333}}]}"
+  },
+  {
+   "audio_track_info": "{\"id\":\"f52ca874-0bc4-4a2e-94fd-14b6a5aa95da\",\"label\":\"MacBook Pro 마이크 (Built-in)\"}",
+   "pid": 45312,
+   "request_id": 11,
+   "request_type": "getUserMedia",
+   "rid": 32225,
+   "stream_id": "e7e72c6f-b9fc-4a12-b3eb-0284be0c4323",
+   "timestamp": 1780805044271.078,
+   "video_track_info": "{\"id\":\"8defa123-782b-456e-ba7c-b1126820cfc7\",\"label\":\"FaceTime HD 카메라 (3A71:F4B5)\"}"
+  },
+  {
+   "audio": "",
+   "origin": "http://localhost:8090",
+   "pid": 45312,
+   "request_id": 12,
+   "request_type": "getUserMedia",
+   "rid": 32225,
+   "timestamp": 1780805049825.066,
+   "url": "http://localhost:8090/ocs/chat.html",
+   "video": "{\"advanced\": [{\"aspectRatio\": {\"min\": 1.33333}}, {\"aspectRatio\": {\"max\": 1.33333}}]}"
+  },
+  {
+   "audio_track_info": "{\"id\":\"a8c4583b-a897-46c5-9c10-4efba82cd95e\",\"label\":\"MacBook Pro 마이크 (Built-in)\"}",
+   "pid": 45312,
+   "request_id": 12,
+   "request_type": "getUserMedia",
+   "rid": 32225,
+   "stream_id": "33497cd2-7892-4923-b5a5-63d500f8d7cb",
+   "timestamp": 1780805051149.844,
+   "video_track_info": "{\"id\":\"18b9d0e0-5f01-4fc4-9f30-2b6935a7fecc\",\"label\":\"FaceTime HD 카메라 (3A71:F4B5)\"}"
+  }
+ ],
+ "PeerConnections": {
+  "32144-1": {
+   "pid": 34090,
+   "rtcConfiguration": "{\"bundlePolicy\":\"max-bundle\",\"alwaysNegotiateDataChannels\":false}",
+   "stats": {
+    "P-dataChannelsClosed": {
+     "startTime": "2026-06-07T03:39:20.219Z",
+     "endTime": "2026-06-07T04:09:53.218Z",
+     "statsType": "peer-connection",
+     "values": "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]"
+    },
+    "P-dataChannelsOpened": {
+     "startTime": "2026-06-07T03:39:20.219Z",
+     "endTime": "2026-06-07T04:09:53.218Z",
+     "statsType": "peer-connection",
+     "values": "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]"
+    },
+    "P-type": {
+     "startTime": "2026-06-07T03:39:20.219Z",
+     "endTime": "2026-06-07T04:09:53.218Z",
+     "statsType": "peer-connection",
+     "values": "[\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\",\"peer-connection\"]"
+    },
+    "P-timestamp": {
+     "startTime": "2026-06-07T03:39:20.219Z",
+     "endTime": "2026-06-07T04:09:53.218Z",
+     "statsType": "peer-connection",
+     "values": "[1780803560219.46,1780803561219.02,1780803562219.031,1780803563217.863,1780803564219.211,1780803565218.937,1780803566218.776,1780803567218.914,1780803568218.552,1780803569218.539,1780803570218.224,1780803571218.549,1780803572218.805,1780803573219.39,1780803574219.048,1780803575513.43,1780803576514.044,1780803577514.831,1780803578514.259,1780803579516.481,1780803580516.09,1780803581513.078,1780803582515.773,1780803583511.768,1780803584518.399,1780803585513.753,1780803586515.071,1780803587513.673,1780803588514.999,1780803589512.906,1780803590514.091,1780803591516.409,1780803592516.693,1780803593511.875,1780803594516.618,1780803595515.097,1780803596513.287,1780803597521.552,1780803598519.063,1780803599518.307,1780803600516.414,1780803601520.177,1780803602516.298,1780803603519.665,1780803604525.821,1780803605517.405,1780803606517.145,1780803607517.4,1780803608519.687,1780803609517.774,1780803610516.74,1780803611514.426,1780803612514.097,1780803613517.022,1780803614513.654,1780803615516.091,1780803616514.473,1780803617515.172,1780803618511.771,1780803619514.574,1780803620512.952,1780803621513.398,1780803622515.158,1780803623516.838,1780803624514.331,1780803625519.84,1780803626514.351,1780803627519.088,1780803628518.419,1780803629514.886,1780803630516.922,1780803631516.644,1780803632512.566,1780803633513.603,1780803634519.118,1780803657519.368,1780803678726.632,1780803679219.069,1780803680219.664,1780803681218.232,1780803682218.236,1780803683218.928,1780803684219.579,1780803685515.522,1780803686515.013,1780803687515.943,1780803688515.494,1780803689514.691,1780803690515.16,1780803691514.855,1780803692512.962,1780803693513.927,1780803694516.381,1780803695512.453,1780803696517.501,1780803697517.268,1780803698518.297,1780803699518.875,1780803700520.52,1780803701516.947,1780803702525.035,1780803703518.077,1780803704515.23,1780803705521.995,1780803706518.081,1780803707514.187,1780803708519.215,1780803709515.62,1780803710515.048,1780803711521.331,1780803712518.714,1780803713516.716,1780803714520.196,1780803715518.229,1780803716516.635,1780803717518.297,1780803718515.993,1780803719515.934,1780803720515.026,1780803721517.849,1780803722514.272,1780803723517.693,1780803724517.255,1780803725513.295,1780803726514.377,1780803727514.694,1780803728513.746,1780803729516.722,1780803730517.075,1780803731513.969,1780803732515.85,1780803733516.207,1780803734512.705,1780803735516.762,1780803736514.083,1780803737513.361,1780803738513.61,1780803739519.092,1780803740513.636,1780803741516.62,1780803742514.639,1780803743517.376,1780803744515.949,1780803777519.095,1780803837516.572,1780803897516.846,1780803903089.675,1780803903218.948,1780803904521.514,1780803905515.673,1780803906521.191,1780803907521.05,1780803908514.374,1780803909523.058,1780803910516.159,1780803911513.391,1780803912516.629,1780803913517.096,1780803914512.948,1780803915516.452,1780803916520.884,1780803917517.425,1780803918518.685,1780803919515.859,1780803920515.539,1780803921518.112,1780803922519.998,1780803923522.231,1780803924517.96,1780803925517.716,1780803926519.326,1780803927516.529,1780803928517.962,1780803929512.229,1780803930518.79,1780803931515.585,1780803932515.214,1780803933519.991,1780803934521.061,1780803935516.602,1780803936517.919,1780803937518.468,1780803938518.167,1780803939515.602,1780803940519.5,1780803941519.057,1780803942516.603,1780803943515.832,1780803944517.9,1780803945521.493,1780803946516.478,1780803947514.949,1780803948522.088,1780803949516.551,1780803950514.482,1780803951519.338,1780803952516.524,1780803953515.955,1780803954516.61,1780803955514.94,1780803956516.803,1780803957516.669,1780803958514.194,1780803959515.161,1780803960522.017,1780803961511.623,1780803962513.881,1780803963518.617,1780804017519.445,1780804077520.696,1780804137522.07,1780804197517.555,1780804257518.636,1780804317518.94,1780804377522.139,1780804437517.736,1780804497525.632,1780804557518.595,1780804617524.445,1780804632587.252,1780804633219.171,1780804634511.768,1780804635252.906,1780804636517.715,1780804637513.474,1780804638517.961,1780804639519.063,1780804640515.221,1780804641518.402,1780804642527.049,1780804643515.333,1780804644518.235,1780804645515.335,1780804646515.809,1780804647514.409,1780804648518.877,1780804649512.992,1780804650515.786,1780804651522.722,1780804652219.258,1780804653219.719,1780804654218.933,1780804655513.123,1780804656516.614,1780804657519.611,1780804658517.878,1780804659516.864,1780804660516.442,1780804661516.338,1780804662511.701,1780804663515.757,1780804664519.923,1780804665513.339,1780804666516.652,1780804667521.007,1780804668512.664,1780804669514.259,1780804670513.46,1780804671512.779,1780804672512.93,1780804673513.088,1780804674513.251,1780804675513.982,1780804676516.515,1780804677515.281,1780804678516.348,1780804679514.558,1780804680516.914,1780804681516.483,1780804682515.5,1780804683517.948,1780804684517.724,1780804685518.351,1780804686516.48,1780804687516.75,1780804688513.424,1780804689518.525,1780804690516.582,1780804691219.295,1780804692219.611,1780804693270.347,1780804694219.745,1780804695219.551,1780804696219.127,1780804697219.242,1780804698218.016,1780804699218.316,1780804700219.08,1780804701219.463,1780804702218.665,1780804703219.356,1780804704219.495,1780804705218.909,1780804706218.157,1780804707516.336,1780804708518.539,1780804709517.723,1780804710516.209,1780804711518.098,1780804712515.001,1780804713515.896,1780804714517.016,1780804715515.738,1780804716517.634,1780804717515.538,1780804718513.506,1780804719516.347,1780804720516.207,1780804721513.368,1780804722514.607,1780804723517.81,1780804724513.58,1780804725515.352,1780804726521.438,1780804727516.425,1780804728517.04,1780804729512.176,1780804730520.315,1780804731516.739,1780804732517.86,1780804733518.487,1780804734520.431,1780804735513.855,1780804736514.732,1780804737514.46,1780804738512.671,1780804739522.24,1780804740512.06,1780804741522.344,1780804742512.05,1780804743517.398,1780804744515.801,1780804745512.734,1780804746514.855,1780804747518.363,1780804748520.069,1780804749515.912,1780804750515.672,1780804751516.963,1780804752522.963,1780804753516.793,1780804754516.813,1780804755515.98,1780804756512.717,1780804757517.341,1780804758518.818,1780804759518.816,1780804760513.439,1780804761517.003,1780804762518.361,1780804763517.546,1780804764515.865,1780804765512.703,1780804766517.341,1780804797519.141,1780804857518.271,1780804917520.672,1780804977518.299,1780805037516.259,1780805097516.82,1780805157517.077,1780805217517.011,1780805277517.137,1780805337519.154,1780805389003.782,1780805389220.004,1780805390218.536,1780805391220.573,1780805392220.258,1780805393218.448]"
+    }
+   },
+   "updateLog": [
+    {
+     "type": "onsignalingstatechange",
+     "value": "\"stable\"",
+     "timestamp": 1780803560135.481
+    },
+    {
+     "type": "oniceconnectionstatechange",
+     "value": "\"new\"",
+     "timestamp": 1780803560135.579
+    },
+    {
+     "type": "onconnectionstatechange",
+     "value": "\"new\"",
+     "timestamp": 1780803560135.59
+    }
+   ],
+   "url": "https://chatgpt.com/"
+  }
+ },
+ "UserAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36",
+ "UserAgentData": {
+  "brands": [
+   {
+    "brand": "Chromium",
+    "version": "148"
+   },
+   {
+    "brand": "Google Chrome",
+    "version": "148"
+   },
+   {
+    "brand": "Not/A)Brand",
+    "version": "99"
+   }
+  ],
+  "fullVersionList": [
+   {
+    "brand": "Chromium",
+    "version": "148.0.7778.168"
+   },
+   {
+    "brand": "Google Chrome",
+    "version": "148.0.7778.168"
+   },
+   {
+    "brand": "Not/A)Brand",
+    "version": "99.0.0.0"
+   }
+  ],
+  "mobile": false,
+  "platform": "macOS"
+ }
+}

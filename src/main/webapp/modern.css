@@ -1,0 +1,391 @@
+/* ========================================================================
+   WEBRTC VIDEO CHAT - MODERN CSS
+   ========================================================================
+   
+   📋 TABLE OF CONTENTS
+   ───────────────────────────────────────────────────────────────
+   1. CSS VARIABLES DEFINITION          (Lines 15-42)
+   2. DARK THEME                        (Lines 44-54)
+   3. BASE STYLES                       (Lines 56-67)
+   4. MAIN COMPONENTS                   (Lines 69-109)
+      - Container
+      - Info Box
+   5. LOGIN SECTION                     (Lines 111-164)
+   6. USER LIST                         (Lines 166-215)
+   7. VIDEO AREA                        (Lines 217-243)
+   8. BUTTONS                           (Lines 245-270)
+   9. RESPONSIVE DESIGN                 (Lines 272-296)
+   10. ANIMATIONS                       (Lines 298-311)
+   11. UTILITIES                        (Lines 313-316)
+   12. STATUS INDICATORS                (Lines 318-334)
+   13. VIDEO CONTROLS                   (Lines 336-354)
+   ======================================================================== */
+
+/* ===== CSS VARIABLES DEFINITION ===== */
+:root {
+  /* Background Colors */
+  --bg-primary: #f8fafc;
+  --bg-secondary: white;
+  --bg-tertiary: #f8fafc;
+  --bg-dark: #1e293b;
+  
+  /* Text Colors */
+  --text-primary: #1e293b;
+  --text-secondary: white;
+  --text-muted: #475569;
+  
+  /* Border & Shadow */
+  --border-color: #e2e8f0;
+  --border-dark: rgba(255, 255, 255, 0.1);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 1px 3px rgba(0, 0, 0, 0.06);
+  
+  /* Accent Colors */
+  --accent-primary: #3b82f6;
+  --accent-primary-hover: #2563eb;
+  --accent-secondary: #10b981;
+  --accent-danger: #ef4444;
+  --accent-danger-hover: #dc2626;
+  --accent-warning: #f59e0b;
+  --accent-info: #60a5fa;
+}
+
+/* ===== DARK THEME ===== */
+:root.dark-theme {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-tertiary: #334155;
+  --text-primary: white;
+  --text-muted: rgba(255, 255, 255, 0.8);
+  --border-color: #334155;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+/* ===== BASE STYLES ===== */
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg-primary);
+  margin: 0;
+  padding: 20px;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease;
+}
+
+/* ===== MAIN COMPONENTS ===== */
+
+/* Container */
+.container {
+  background: var(--bg-secondary);
+  border-radius: 16px;
+  box-shadow: var(--shadow-md);
+  max-width: 1200px;
+  width: 100%;
+  padding: 32px;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  grid-template-rows: auto 1fr;
+  gap: 24px;
+  min-height: 600px;
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+}
+
+/* Info Box */
+.infobox {
+  background: var(--bg-dark);
+  color: var(--text-secondary);
+  padding: 24px;
+  border-radius: 12px;
+  grid-column: 1 / -1;
+  transition: all 0.3s ease;
+}
+
+.infobox h1 {
+  margin: 0 0 16px 0;
+  font-size: 28px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.infobox p {
+  margin: 12px 0;
+  line-height: 1.6;
+  opacity: 0.9;
+  font-size: 15px;
+}
+
+.infobox a {
+  color: var(--accent-info);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.infobox a:hover {
+  color: var(--accent-primary);
+  text-decoration: underline;
+}
+
+/* ===== LOGIN SECTION ===== */
+.login-section {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 16px;
+  border: 1px solid var(--border-dark);
+  transition: all 0.3s ease;
+}
+
+.login-section input[type="text"] {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--border-dark);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-secondary);
+  font-size: 15px;
+  margin-bottom: 12px;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+  font-weight: 500;
+}
+
+.login-section input[type="text"]:focus {
+  outline: none;
+  border-color: var(--accent-info);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.login-section input[type="text"]::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.login-section input[type="button"] {
+  width: 100%;
+  padding: 12px;
+  background: var(--accent-primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.login-section input[type="button"]:hover {
+  background: var(--accent-primary-hover);
+}
+
+.login-section input[type="button"]:active {
+  transform: translateY(1px);
+}
+
+/* ===== USER LIST ===== */
+.userlistbox {
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  overflow-y: auto;
+  max-height: 400px;
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+}
+
+.userlistbox h3 {
+  margin: 0 0 16px 0;
+  color: var(--text-primary);
+  font-size: 18px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.userlistbox ul {
+  margin: 0;
+  padding: 0;
+}
+
+.userlistbox li {
+  background: var(--bg-tertiary);
+  margin: 8px 0;
+  padding: 12px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  list-style: none;
+  font-weight: 500;
+  color: var(--text-muted);
+  border: 1px solid var(--border-color);
+}
+
+.userlistbox li:hover {
+  background: var(--accent-primary);
+  color: white;
+  border-color: var(--accent-primary);
+  transform: translateX(4px);
+}
+
+.userlistbox li:active {
+  transform: translateX(2px);
+}
+
+/* ===== VIDEO AREA ===== */
+.camerabox {
+  background: var(--bg-dark);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: all 0.3s ease;
+}
+
+.camerabox video {
+  width: 100%;
+  height: 200px;
+  border-radius: 8px;
+  background: #000;
+  object-fit: cover;
+}
+
+.camerabox video#received_video {
+  border: 2px solid var(--accent-primary);
+}
+
+.camerabox video#local_video {
+  border: 2px solid var(--accent-secondary);
+  transform: scaleX(-1);
+}
+
+/* ===== BUTTONS ===== */
+#hangup-button {
+  background: var(--accent-danger);
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+#hangup-button:hover:not(:disabled) {
+  background: var(--accent-danger-hover);
+}
+
+#hangup-button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+#hangup-button:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+  body {
+    padding: 16px;
+  }
+
+  .container {
+    grid-template-columns: 1fr;
+    padding: 20px;
+    min-height: auto;
+    gap: 20px;
+  }
+
+  .camerabox video {
+    height: 150px;
+  }
+
+  .infobox {
+    padding: 20px;
+  }
+
+  .infobox h1 {
+    font-size: 24px;
+  }
+}
+
+/* ===== ANIMATIONS ===== */
+.loading {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ===== UTILITIES ===== */
+.text-center { text-align: center; }
+.mb-10 { margin-bottom: 10px; }
+.mt-15 { margin-top: 15px; }
+
+/* ===== STATUS INDICATORS ===== */
+.connection-status {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.connection-status.connected { background: var(--accent-secondary); }
+.connection-status.connecting { background: var(--accent-warning); animation: pulse 1s infinite; }
+.connection-status.disconnected { background: var(--accent-danger); }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ===== VIDEO CONTROLS ===== */
+.video-controls {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  display: flex;
+  gap: 8px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.camerabox:hover .video-controls {
+  opacity: 1;
+}
+
+.video-control-btn {
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.video-control-btn:hover {
+  background: rgba(0, 0, 0, 0.9);
+  transform: scale(1.05);
+}

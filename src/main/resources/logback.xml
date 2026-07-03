@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true">
+
+    <!-- 로그 패턴 -->
+    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"/>
+
+    <!-- 로그 저장 경로 -->
+    <!-- <property name="LOG_PATH" value="/home/ocs/logs/tomcat"/> --> 
+    <property name="LOG_PATH" value="/Users/myoungjikim/dev/logs/oscmeet"/>
+    <!-- 주의! 서버 권한에 따라 파일을 못쓸수 있음. 확인 필요 -->
+
+    <!-- 콘솔 출력 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 파일 출력 -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <!-- 현재 로그 파일 -->
+        <file>${LOG_PATH}/ocs.log</file>
+
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+
+        <!-- 날짜 + 용량 기준 롤링 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+
+            <!-- %i는 같은 날짜에 파일이 여러 개 생길 때 번호 -->
+            <fileNamePattern>${LOG_PATH}/ocs-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+
+            <!-- 파일 하나가 50MB 넘으면 새 파일 생성 -->
+            <maxFileSize>50MB</maxFileSize>
+
+            <!-- 최근 7일치만 보관 -->
+            <maxHistory>7</maxHistory>
+
+        </rollingPolicy>
+    </appender>
+    
+    <!-- 스프링 프레임워크 로그 -->
+    <logger name="org.springframework" level="INFO"/>
+
+    <!-- WebRTC 시그널링 로그 -->
+    <logger name="webrtc" level="DEBUG"/>
+
+    <!-- Spring WebSocket 로그 -->
+    <!-- <logger name="org.springframework.web.socket" level="INFO"/> -->
+
+    <!-- 기본 로그 설정 -->
+    <root level="${error.mode}">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
+    </root>
+
+<typeAliases></typeAliases>
+</configuration>

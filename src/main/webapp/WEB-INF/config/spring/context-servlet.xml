@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:websocket="http://www.springframework.org/schema/websocket"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/mvc
+           http://www.springframework.org/schema/mvc/spring-mvc.xsd
+           http://www.springframework.org/schema/websocket
+           http://www.springframework.org/schema/websocket/spring-websocket.xsd">
+
+   <!-- 1) @RequestMapping, @ResponseBody 등 Spring MVC 기본 기능 활성화 -->
+    <mvc:annotation-driven />
+    
+    <!-- 2) @Controller 스캔 -->
+    <context:component-scan base-package="webrtc" use-default-filters="false">
+	    <context:include-filter 
+	        type="annotation"
+	        expression="org.springframework.stereotype.Controller" />
+	    <context:include-filter 
+	        type="annotation"
+	        expression="org.springframework.web.bind.annotation.ControllerAdvice" />
+	</context:component-scan>
+
+    <!-- 3) DispatcherServlet을 '/'에 매핑 -> 정적 자원(HTML, JS, CSS) 처리 + 처리할 핸들러가 없는 요청은 컨테이너의 DefaultServlet에 위임한다. -->
+    <mvc:default-servlet-handler/>
+
+    <!-- 4) WebSocket 핸들러 등록 -->
+    <websocket:handlers>
+        <websocket:mapping path="/ws" handler="signalingHandler"/>
+    </websocket:handlers>
+    <bean id="signalingHandler" class="webrtc.handler.SignalingHandler"/>
+
+</beans>

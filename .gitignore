@@ -1,0 +1,28 @@
+# Java
+*.class
+*.log
+
+# Maven
+target/
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# IntelliJ
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Upload / local files
+upload/
+uploads/
+logs/
+
+# Environment / secret
+.env
+application-local.properties

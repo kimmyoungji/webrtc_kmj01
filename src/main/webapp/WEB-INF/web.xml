@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app id="WebApp_ID" version="3.1"
+         xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="
+         	http://xmlns.jcp.org/xml/ns/javaee 
+         	http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+
+    <display-name>webrtc_kmj01</display-name>
+
+    <!-- 1. Root ApplicationContext 설정 -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+        	/WEB-INF/config/spring/context-*.xml
+        </param-value>
+    </context-param>
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class> <!-- root-context.xml을 읽어서 Root ApplicationContext 생성 -->
+    </listener>
+    
+    <!-- 2. SpringMVC Web ApplicationContext 설정 -->
+    <servlet>
+        <servlet-name>dispatcher</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>/WEB-INF/config/spring/context-servlet.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+        <!-- WebSocket(비동기)을 사용하려면 async-supported=true 필수 -->
+        <async-supported>true</async-supported>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>dispatcher</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+    
+    <!-- 3. JWT 인증 필터: /api/* 경로에만 적용 (/ws는 SignalingHandler에서 직접 검증) -->
+    <filter>
+        <filter-name>jwtAuthenticationFilter</filter-name>
+        <filter-class>webrtc.security.JwtAuthenticationFilter</filter-class>
+        <async-supported>true</async-supported>
+    </filter>
+    <filter-mapping>
+        <filter-name>jwtAuthenticationFilter</filter-name>
+        <url-pattern>/api/*</url-pattern>
+    </filter-mapping>
+
+    <!-- 4. UTF-8 인코딩 필터 -->
+    <filter>
+        <filter-name>encodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+        <init-param>
+            <param-name>forceEncoding</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <async-supported>true</async-supported>
+    </filter>
+    <filter-mapping>
+        <filter-name>encodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!-- 5. 시작 페이지 -->
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+
+</web-app>

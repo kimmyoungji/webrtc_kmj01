@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>로그인 - WebRTC 비디오 채팅</title>
+  <link href="modern.css" rel="stylesheet">
+  <link href="shared.css" rel="stylesheet">
+  <script type="text/javascript" src="auth.js"></script>
+  <script type="text/javascript" src="login.js"></script>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .login-container {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      padding: 40px;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .login-container h1 {
+      text-align: center;
+      color: #333;
+      margin: 0 0 10px 0;
+      font-size: 28px;
+    }
+
+    .login-container .subtitle {
+      text-align: center;
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 30px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      color: #333;
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.3s;
+      box-sizing: border-box;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #667eea;
+      background: #f9f9ff;
+    }
+
+    .login-button {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      margin-top: 20px;
+    }
+
+    .login-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .login-button:active {
+      transform: translateY(0);
+    }
+
+    .login-button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .error-message {
+      color: #e74c3c;
+      font-size: 14px;
+      margin-top: 12px;
+      text-align: center;
+      min-height: 20px;
+    }
+
+    .demo-info {
+      background: #e8f4f8;
+      border-left: 4px solid #3498db;
+      padding: 12px;
+      margin-top: 20px;
+      border-radius: 4px;
+      font-size: 13px;
+      color: #2c3e50;
+    }
+
+    .demo-info strong {
+      color: #2980b9;
+    }
+
+    html.dark-theme {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    }
+
+    html.dark-theme .login-container {
+      background: #2d3748;
+    }
+
+    html.dark-theme .login-container h1 {
+      color: #fff;
+    }
+
+    html.dark-theme .login-container .subtitle {
+      color: #a0aec0;
+    }
+
+    html.dark-theme .form-group label {
+      color: #e2e8f0;
+    }
+
+    html.dark-theme .form-group input {
+      background: #1a202c;
+      border-color: #4a5568;
+      color: #e2e8f0;
+    }
+
+    html.dark-theme .form-group input:focus {
+      background: #2d3748;
+      border-color: #667eea;
+    }
+
+    html.dark-theme .demo-info {
+      background: #1a365d;
+      border-left-color: #3182ce;
+      color: #e2e8f0;
+    }
+
+    html.dark-theme .demo-info strong {
+      color: #63b3ed;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h1>📹 WebRTC 채팅</h1>
+    <p class="subtitle">로그인하여 비디오 채팅을 시작하세요</p>
+
+    <form onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label for="username">사용자 이름</label>
+        <input 
+          id="username" 
+          type="text" 
+          maxlength="12" 
+          required 
+          autocomplete="username" 
+          placeholder="예: alice"
+          autofocus
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="password">비밀번호</label>
+        <input 
+          id="password" 
+          type="password" 
+          maxlength="20" 
+          required 
+          autocomplete="current-password"
+          placeholder="예: 1234"
+        >
+      </div>
+
+      <button type="submit" class="login-button" id="login-btn">🔐 로그인</button>
+
+      <div class="error-message" id="error-message"></div>
+    </form>
+
+    <div class="demo-info">
+      <strong>📌 테스트 계정:</strong><br>
+      사용자명: 아무거나<br>
+      비밀번호: <code>1234</code>
+    </div>
+  </div>
+</body>
+</html>
