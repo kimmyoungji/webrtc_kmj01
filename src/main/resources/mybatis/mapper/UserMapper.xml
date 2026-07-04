@@ -6,15 +6,15 @@
 
 <mapper namespace="webrtc.mapper.UserMapper">
 
-    <select id="selectUserByUsername">
-        SELECT  id, 
-        		username, 
-        		password, 
-        		created_at
-		  FROM  t_ocsm_user;
-    </select>
+    <select id="selectUserByUsername"
+	        parameterType="string"
+	        resultType="webrtc.domain.User">
+	    SELECT id, username, password, created_at
+	      FROM t_ocsm_user
+	     WHERE username = #{username}
+	</select>
     
-    <insert id="insertUser" parameterType="webrtc.domain.User">
+    <insert id="insertUser" parameterType="User">
     	INSERT INTO  t_ocsm_user 
     	(
     		username, 

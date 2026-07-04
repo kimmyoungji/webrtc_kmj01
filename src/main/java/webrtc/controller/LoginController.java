@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import webrtc.security.JwtUtil;
-import webrtc.service.LoginService;
+import webrtc.service.AuthService;
 
 import java.util.Map;
 
@@ -17,7 +17,7 @@ import java.util.Map;
 public class LoginController {
 
     @Autowired
-    private LoginService loginService;
+    private AuthService loginService;
 
     /**
      * 로그인 엔드포인트

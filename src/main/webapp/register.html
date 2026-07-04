@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>회원가입 - WebRTC 비디오 채팅</title>
+  <link href="register.css" rel="stylesheet">
+  <script type="text/javascript" src="register.js"></script>
+</head>
+<body>
+  <div class="register-container">
+    <h1>📹 WebRTC 채팅</h1>
+    <p class="subtitle">계정을 만들고 비디오 채팅을 시작하세요</p>
+
+    <form onsubmit="handleRegister(event)">
+      <div class="form-group">
+        <label for="username">사용자 이름</label>
+        <input
+          id="username"
+          type="text"
+          maxlength="12"
+          required
+          autocomplete="username"
+          placeholder="2~12자"
+          autofocus
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="password">비밀번호</label>
+        <input
+          id="password"
+          type="password"
+          maxlength="20"
+          required
+          autocomplete="new-password"
+          placeholder="4자 이상"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="password-confirm">비밀번호 확인</label>
+        <input
+          id="password-confirm"
+          type="password"
+          maxlength="20"
+          required
+          autocomplete="new-password"
+          placeholder="비밀번호를 다시 입력하세요"
+        >
+      </div>
+
+      <button type="submit" class="register-button" id="register-btn">✅ 가입하기</button>
+
+      <div class="error-message"   id="error-message"></div>
+      <div class="success-message" id="success-message"></div>
+    </form>
+
+    <div class="login-link">
+      이미 계정이 있으신가요? <a href="login.html">로그인</a>
+    </div>
+  </div>
+</body>
+</html>

@@ -22,7 +22,7 @@
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="jndiDataSource" />
 		<property name="configLocation" value="classpath:mybatis/mybatis-config.xml" />
-		<property name="mapperLocations" value="classpath*:mybatis/mapper/**/*Mapper.xml" />
+		<property name="mapperLocations" value="classpath*:mybatis/mapper/*Mapper.xml" />
 		<property name="typeAliasesPackage" value="webrtc.domain"/>
 	</bean>
 	
