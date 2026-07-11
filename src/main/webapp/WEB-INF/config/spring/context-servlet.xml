@@ -40,4 +40,9 @@
     <bean id="signalingHandler" class="webrtc.handler.SignalingHandler"/>
     <bean id="cookieHandShakeIntorceptor" class="webrtc.interceptor.CookieHandShakeInterceptor" />
 
+    <!-- 5) WebSocket 메시지 버퍼 크기 설정 (기본값 8KB → SDP 크기(10~20KB) 초과로 연결 종료되는 문제 방지) -->
+    <bean class="org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean">
+        <property name="maxTextMessageBufferSize" value="131072"/>
+    </bean>
+
 </beans>

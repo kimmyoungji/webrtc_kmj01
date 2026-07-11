@@ -4,14 +4,6 @@
  * 역할: 모든 페이지에서 토큰 유효성 확인 및 재인증 처리
  */
 
-/**
- * 현재 토큰이 유효한지 확인 (로컬 스토리지만 확인, 서버 검증 없음)
- * 주의: 이것은 로컬 확인일 뿐이며, 실제 검증은 서버 필터에서 수행
- */
-function hasValidToken() {
-  const token = localStorage.getItem('jwtToken');
-  return token && token.trim().length > 0;
-}
 
 /**
  * 로그아웃 처리 — 서버에 POST /api/logout 요청으로 HttpOnly 쿠키 제거
@@ -19,14 +11,7 @@ function hasValidToken() {
  */
 async function performLogout(skipConfirm = false) {
   if (!skipConfirm && !confirm('로그아웃하시겠습니까?')) return;
-
-  /* type1: localStorage 방식
-  localStorage.removeItem('jwtToken');
-  localStorage.removeItem('username');
-  window.location.href = 'login.html';
-  */
-
-  /* type2: HttpOnly 쿠키 방식 */
+  
   const contextPath = window.location.pathname.replace(/\/[^/]*$/, "");
   try {
     await fetch(contextPath + '/api/logout', {
@@ -41,6 +26,7 @@ async function performLogout(skipConfirm = false) {
   window.location.href = 'login.html';
 }
 
+
 /**
  * HTTP 요청 시 토큰을 Authorization 헤더에 자동 추가
  * 모든 fetch 요청에 사용 가능
@@ -53,6 +39,7 @@ async function performLogout(skipConfirm = false) {
   }; 
 } */
 
+
 /**
  * fetch 래퍼: 토큰을 자동으로 포함하고, 401 에러 시 로그인 페이지로 리다이렉트
  * @param {string} url - 요청 URL
@@ -60,19 +47,7 @@ async function performLogout(skipConfirm = false) {
  * @returns {Promise} fetch 응답
  */
 async function authorizedFetch(url, options = {}) {
-  
-  /* type1
-  const headers = getAuthHeaders();
-  const mergedOptions = {
-    ...options,
-    headers: {
-      ...headers,
-      ...(options.headers || {})
-    },
-  };
-  */
- 
-   /* type2 */
+	
    const mergedOptions = {
 	  ...options,
 	  credentials: 'include',
@@ -93,4 +68,3 @@ async function authorizedFetch(url, options = {}) {
   return response;
 }
 
-console.log('[auth.js] 인증 모듈 로드됨');

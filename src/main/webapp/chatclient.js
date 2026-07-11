@@ -20,8 +20,6 @@ if (!myHostname) myHostname = "localhost";
 // adapter.js가 덮어쓰기 이전 브라우저의 원래 getStats 함수가져오기 (adapter.js의 getStats는 내부적으로 수정될 우려가 있음)
 const _nativeGetStats = RTCPeerConnection.prototype.getStats;
 
-
-
 // Audio/Visual 하드웨어 데이터 스트림 설정
 var mediaConstraints = {
   audio: true,   
@@ -32,17 +30,22 @@ var mediaConstraints = {
   }
 };
 
-var myUsername = null;
-var targetUsername = null;      
+/* 전역 변수 */
+let myUsername = null;		  // 내 사용자명
+let targetUsername = null;    // 타겟 사용자명
 
-var connection = null;  	 // websocket 연결 객체 저장 변수
-var myPeerConnection = null; // webrtc 연결 객체 저장 변수
-var transceiver = null;		 // 
-var webcamStream = null;        
+let connection = null;  	  // websocket 연결 객체 저장 변수
+let myPeerConnection = null;  // webrtc 연결 객체 저장 변수
 
-var makingAnswer = false;       
-var localICECandidates = [];
-var remoteICECandidates = [];
+let webcamStream = null; 	  // 웹캠 데이터 스트림 객체 저장
+
+let audioTransceiver = null;  // webrtc 연결의 음성 데이터 송수신 객체 저장
+let videoTransceiver = null;  // webrtc 연결의 영상 데이터 송수신 객체 저장
+
+let makingAnswer = false; 	  // 응답 생성 중 여부
+       
+let localICECandidates = [];  // 로컬 ice 후보 배열
+let remoteICECandidates = []; // 원격 ice 후보 배열
 
 // Output logging information to console.
 function log(text) {
@@ -50,46 +53,14 @@ function log(text) {
   console.log("[" + time.toLocaleTimeString() + "] " + text);
 }
 
-// Output Event logging information to console.
-// Usage:
-//   const end = eventLog("createPeerConnection");
-//   ... event body logs ...
-//   end();
-function eventLog(title) {
-  const TOTAL_WIDTH = 50;
-  const inner = " " + title + " ";
-  const padTotal = TOTAL_WIDTH - inner.length;
-  const header = inner + ">".repeat(padTotal);
-  console.log(header);
-  return function() {
-   console.log(">".repeat(padTotal) + inner);
-    console.log("\n");
-  };
-}
 // Output an error message to console.
 function log_error(text) {
   var time = new Date();
   console.trace("[" + time.toLocaleTimeString() + "] " + text);
 }
 
-/**
- * 페이지 로드 시 자동으로 WebSocket 연결 수립
- * 사전 조건: chat.html에서 이미 로드됨, auth.js를 통해 토큰 확인됨
- */
-
-/* type1 */
-/* window.addEventListener('DOMContentLoaded', () => {
-  const token = localStorage.getItem('jwtToken');
-  if (token) {
-    log('자동으로 WebSocket 연결을 시작합니다...');
-    connect();
-  } else {
-    log_error('JWT 토큰이 없습니다. 로그인 페이지로 이동합니다.');
-    window.location.href = 'login.html';
-  }
-}); */
-
-/* type2 */
+// 페이지 로드 시 자동으로 WebSocket 연결 수립
+// 사전 조건: chat.html에서 이미 로드됨, auth.js를 통해 토큰 확인됨
 window.addEventListener('DOMContentLoaded', () => {
   connect();  // 쿠키는 브라우저가 자동 전송 → 인증 실패 시 onclose에서 처리
 });
@@ -104,64 +75,39 @@ function sendToServer(msg) {
   connection.send(msgJSON);
 }
 
+// Web Socket 연결
 // Open and configure the connection to the WebSocket server.
 // 페이지 로드 시 자동으로 호출되거나, 재연결 시 호출됨
 function connect() {
-  // localStorage에서 JWT 토큰 가져오기
-  
-  // type1
-  /* const token = localStorage.getItem('jwtToken');
-  if (!token) {
-    log_error('JWT 토큰이 없습니다. 로그인 페이지로 이동합니다.');
-    window.location.href = 'login.html';
-    return;
-  }
+	myUsername = sessionStorage.getItem('username');
+	
+	let serverUrl;
+	let scheme = "ws";
 
-  accessToken = token;
-  myUsername = localStorage.getItem('username'); */
-  
-  //type2
-  const myUsername = sessionStorage.getItem('username');
-
-  var serverUrl;
-  var scheme = "ws";
-
-  // If this is an HTTPS connection, we have to use a secure WebSocket
-  // connection too, so add another "s" to the scheme.
+  // https 연결일 경우 wss로 scheme 변경
   if (document.location.protocol === "https:") {
     scheme += "s";
   }
   
-  // [Spring 변환] 원본: scheme + "://" + myHostname + ":6503" (별도 Node.js 포트)
-  // Spring WebSocket은 동일한 서버의 /ws 엔드포인트에서 처리한다.
-  // pathname에서 마지막 세그먼트를 제거하면 컨텍스트 패스를 얻을 수 있다.
-  //   예) /webrtc_kmj01-1.0.0/index.html → /webrtc_kmj01-1.0.0
-  //   예) /webrtc_kmj01-1.0.0/           → /webrtc_kmj01-1.0.0
-  //   예) / (ROOT 배포)                  → "" (빈 문자열, 그대로 동작)
+  // pathname에서 마지막 세그먼트를 제거하여 컨텍스트 패스를 얻기
   var contextPath = window.location.pathname.replace(/\/[^/]*$/, "");
   
-  debugger;
-  
-  // type1
-  // serverUrl = scheme + "://" + window.location.host + contextPath + "/ws?token=" + encodeURIComponent(accessToken);
-  // type2
+  // serverUrl 구성
   serverUrl = scheme + "://" + window.location.host + contextPath + "/ws"
   
-  debugger;
-
+  // 웹소켓 연결 객체 생성
   connection = new WebSocket(serverUrl);
 
   connection.onopen = function(evt) {
-    log("1) WebSocket Connection opened (Signalling Server Connection Established)");
+    log("WebSocket Connection opened (Signalling Server Connection Established)");
     log(`Connecting to server: ${serverUrl}`);
-    // document.getElementById("text").disabled = false;
-    //document.getElementById("send").disabled = false;
   };
 
   connection.onerror = function(evt) {
     console.dir(evt);
   }
-
+  
+  // onclose event
   connection.onclose = function(evt) {
     log('WebSocket closed: ' + evt.code + ' ' + evt.reason);
     
@@ -174,14 +120,12 @@ function connect() {
     }
   }
 
+  // onmessage event
   connection.onmessage = function(evt) {
-    // var chatBox = document.querySelector(".chatbox");
-    var text = "";
     var msg = JSON.parse(evt.data);
+	
     log("Message received: ");
     console.dir(msg);
-    // var time = new Date(msg.date);
-    // var timeStr = time.toLocaleTimeString();
 
     switch(msg.type) {
 
@@ -214,89 +158,55 @@ function connect() {
       default:
         log_error(msg);
     }
-
-    // If there's text to insert into the chat buffer, do so now, then
-    // scroll the chat panel so that the new text is visible.
-
-    /* if (text.length) {
-      chatBox.innerHTML += text;
-      chatBox.scrollTop = chatBox.scrollHeight - chatBox.clientHeight;
-    } */
   };
 }
 
-/* // Handles a click on the Send button (or pressing return/enter) by
-// building a "message" object and sending it to the server.
-function handleSendButton() {
-  var msg = {
-    text: document.getElementById("text").value,
-    type: "message",
-    id: clientID,
-    date: Date.now()
-  };
-  sendToServer(msg);
-  document.getElementById("text").value = "";
-}
-
-// Handler for keyboard events. This is used to intercept the return and
-// enter keys so that we can call send() to transmit the entered text
-// to the server.
-function handleKey(evt) {
-  if (evt.keyCode === 13 || evt.keyCode === 14) {
-    if (!document.getElementById("send").disabled) {
-      handleSendButton();
-    }
-  }
-} */
-
-// Create the RTCPeerConnection which knows how to talk to our
-// selected STUN/TURN server and then uses getUserMedia() to find
-// our camera and microphone and add that stream to the connection for
-// use in our video call. Then we configure event handlers to get
-// needed notifications on the call.
-
+/**
+ * RTCPeerConnection 생성
+ * 주요 동작:
+ * 1) get turn-credentials (turn 서버 연결정보)
+ * 2) new RTCPeerConnection()
+ * 3) 이벤트 헨들러 등록
+ */
 async function createPeerConnection() {
-  const endEventLog = eventLog("createPeerConnection");
-  // Create an RTCPeerConnection which knows to use our chosen
-  // STUN server.
-
-  log("- Fetching TURN credentials from server");
-  const contextPath = window.location.pathname.replace(/\/[^/]*$/, "");
-  const credResponse = await authorizedFetch(contextPath + '/api/turn-credentials');
-  const credData = await credResponse.json();
-
-  log("- Creating PeerConnection with dynamic ICE servers");
-  myPeerConnection = new RTCPeerConnection({
-    iceServers: [
-      // { urls: "stun:stun.l.google.com:19302" },
-      ...credData.iceServers
-    ]
-  });
-
-  log("- myPeerConnection: " + myPeerConnection);
-  
-  // Set up event handlers for the ICE negotiation process.
-  // when new icecandidate is found
-  myPeerConnection.onicecandidate = handleICECandidateEvent;
-  // when the actual connection between peers changes
-  myPeerConnection.oniceconnectionstatechange = handleICEConnectionStateChangeEvent;
-  // when ice gathering state changes
-  myPeerConnection.onicegatheringstatechange = handleICEGatheringStateChangeEvent;
-  // when signaling state changes (offer, answer, etc.) == during webrtc negotiation
-  myPeerConnection.onsignalingstatechange = handleSignalingStateChangeEvent;
-  // when remote peer changes sdp description (change configuration of peer connection), add/remove track 
-  myPeerConnection.onnegotiationneeded = handleNegotiationNeededEvent;
-  // when remote peer added a track
-  myPeerConnection.ontrack = handleTrackEvent;
-
-  endEventLog();
+	// turn-credentials (turn 서버 연결정보) 가져오기
+	const contextPath = window.location.pathname.replace(/\/[^/]*$/, "");
+  	const credResponse = await authorizedFetch(contextPath + '/api/turn-credentials');
+  	const credData = await credResponse.json();
+	
+	// RTCPeerConnection 생성
+	log("- Creating PeerConnection with dynamic ICE servers");
+	myPeerConnection = new RTCPeerConnection({
+    	iceServers: [
+      		// { urls: "stun:stun.l.google.com:19302" },
+      		...credData.iceServers
+    	]
+	});
+	log("- myPeerConnection: " + myPeerConnection);
+  	
+  	// 이벤트 헨들러 등록
+  	// when new local icecandidate is found
+  	myPeerConnection.onicecandidate = handleICECandidateEvent; // add local icecandidate, send "new-ice-candidate" msg to server
+ 	// when the actual connection between peers changes (state 종류: new, checking, connected, disconnected, completed, failed )
+  	myPeerConnection.oniceconnectionstatechange = handleICEConnectionStateChangeEvent; //check and log conn state, closeVideoCall if state="disconnected"
+  	// ice 후보 수집 상태가 변경되었을 때 발생 (ex: myPeerConnecion.addICECandidate(icecandi)) / (state 종류: new, gathering, complete)
+  	myPeerConnection.onicegatheringstatechange = handleICEGatheringStateChangeEvent; // logging
+  	// sdp 변경시 발생 (ex: myPeerConnection.setRemoteDescription(desc))
+	// (state 종류: stable, has-local-sdp, has-remote-sdp, closed) - 한가지 이상의 상태가 공존할 수 없음
+  	myPeerConnection.onsignalingstatechange = handleSignalingStateChangeEvent; //logging, closeVideoCall if state=="closed""
+  	// local의 연결상태가 바뀌어 새로운 sdp를 생성하여 peer에게 전달해야할 때 발생. (ex: myPeerConnection.addTrack()) 
+  	myPeerConnection.onnegotiationneeded = handleNegotiationNeededEvent; //create offersdp, send "video-offer" msg to server(if not makingAnswer)
+  	// 상대방이 보내는 미디어 트랙이 local myPeerConnection에 도착시 발생
+  	myPeerConnection.ontrack = handleTrackEvent; // attach received track to video element
 }
 
-// Called by the WebRTC layer to let us know when it's time to
-// begin, resume, or restart ICE negotiation.
-
+/**
+ * local의 연결상태가 바뀌어 새로운 sdp를 생성하여 peer에게 전달해야할 때(협상=negotiation) 발생. (ex: myPeerConnection.addTrack()) 
+ * 주요동작:
+ * 1) create offersdp
+ * 2) send "video-offer" msg to server(if not makingAnswer)
+ */
 async function handleNegotiationNeededEvent() {
-  const endEventLog = eventLog("handleNegotiationNeededEvent");
   try {
     const offer = await myPeerConnection.createOffer();
     log("- creating SDP offer");
@@ -305,7 +215,6 @@ async function handleNegotiationNeededEvent() {
     // callee가 answer 만드는 중이면 offer 재전송 금지
     if (makingAnswer) {
       log("- skip negotiationneeded while making answer");
-      endEventLog();
       return;
     }
 
@@ -313,14 +222,12 @@ async function handleNegotiationNeededEvent() {
     // return to the caller. Another negotiationneeded event
     // will be fired when the state stabilizes.
     if (myPeerConnection.signalingState != "stable") {
-      log("- callee: The connection isn't stable yet; postponing...")
-      endEventLog();
+      log("- The connection isn't stable yet; postponing...")
       return;
     }
 
     // Establish the offer as the local peer's current
     // description.
-    log("- caller: Setting local description to the offer");
     await myPeerConnection.setLocalDescription(offer);
 
     // Send the offer to the remote peer.
@@ -331,10 +238,8 @@ async function handleNegotiationNeededEvent() {
       sdp: myPeerConnection.localDescription
     });
   } catch(err) {
-    log("- error: The following error occurred while handling the negotiationneeded event:");
     reportError(err);
   };
-  endEventLog();
 }
 
 // Called by the WebRTC layer when events occur on the media tracks
@@ -350,23 +255,18 @@ async function handleNegotiationNeededEvent() {
 //
 // In our case, we're just taking the first stream found and attaching
 // it to the <video> element for incoming media.
-
 function handleTrackEvent(event) {
-  const endEventLog = eventLog("handleTrackEvent");
   log("- attach track to video element, and activate hangup button");
   document.getElementById("received_video").srcObject = event.streams[0];
   document.getElementById("hangup-button").disabled = false;
   document.getElementById("mute-button").disabled = false;
   document.getElementById("video-button").disabled = false;
-  endEventLog();
 }
 
 // Handles |icecandidate| events by forwarding the specified
 // ICE candidate (created by our local ICE agent) to the other
 // peer through the signaling server.
-
 function handleICECandidateEvent(event) {
-  const endEventLog = eventLog("handleICECandidateEvent");
   localICECandidates.push(event.candidate);
   if (event.candidate) {
     sendToServer({
@@ -375,18 +275,12 @@ function handleICECandidateEvent(event) {
       candidate: event.candidate
     });
   }
-  endEventLog();
 }
 
 // Handle |iceconnectionstatechange| events. This will detect
 // when the ICE connection is closed, failed, or disconnected.
-//
 // This is called when the state of the ICE agent changes.
-
 function handleICEConnectionStateChangeEvent(event) {
-  const endEventLog = eventLog("handleICEConnectionStateChangeEvent");
-  log("- ICE connection state changed to: " + myPeerConnection.iceConnectionState);
-
   switch(myPeerConnection.iceConnectionState) {
     case "connected":
     case "completed":
@@ -408,7 +302,6 @@ function handleICEConnectionStateChangeEvent(event) {
       closeVideoCall();
       break;
   }
-  endEventLog();
 }
 
 // Set up a |signalingstatechange| event handler. This will detect when
@@ -417,7 +310,6 @@ function handleICEConnectionStateChangeEvent(event) {
 // NOTE: This will actually move to the new RTCPeerConnectionState enum
 // returned in the property RTCPeerConnection.connectionState when
 // browsers catch up with the latest version of the specification!
-
 function handleSignalingStateChangeEvent(event) {
   console.log("========> WebRTC signaling state changed to: " + myPeerConnection.signalingState);
   switch(myPeerConnection.signalingState) {
@@ -443,20 +335,17 @@ function handleICEGatheringStateChangeEvent(event) {
 // Given a message containing a list of usernames, this function
 // populates the user list box with those names, making each item
 // clickable to allow starting a video call.
-
 function handleUserlistMsg(msg) {
   var listElem = document.getElementById("userlist");
 
   // Remove all current list members. We could do this smarter,
   // by adding and updating users instead of rebuilding from
   // scratch but this will do for this sample.
-
   while (listElem.firstChild) {
     listElem.removeChild(listElem.firstChild);
   }
 
   // Add member names from the received list.
-
   msg.users.forEach(function(username) {
     var item = document.createElement("li");
     item.appendChild(document.createTextNode(username));
@@ -470,84 +359,80 @@ function handleUserlistMsg(msg) {
 // make or receive another call if they wish. This is called both
 // when the user hangs up, the other user hangs up, or if a connection
 // failure is detected.
-
 function closeVideoCall() {
-  var localVideo = document.getElementById("local_video");
+	log("Closing the call");
+	var localVideo = document.getElementById("local_video");
+	
+	// Close the RTCPeerConnection
+	if (myPeerConnection) {
 
-  log("Closing the call");
+    	// Disconnect all our event listeners; we don't want stray events
+    	// to interfere with the hangup while it's ongoing.
+	    myPeerConnection.ontrack = null;
+	    myPeerConnection.onicecandidate = null;
+	    myPeerConnection.oniceconnectionstatechange = null;
+	    myPeerConnection.onsignalingstatechange = null;
+	    myPeerConnection.onicegatheringstatechange = null;
+	    myPeerConnection.onnegotiationneeded = null;
 
-  // Close the RTCPeerConnection
+	    // Stop all transceivers on the connection
+	    myPeerConnection.getTransceivers().forEach(transceiver => {
+	      transceiver.stop();
+	    });
+	
+	    // Stop the webcam preview as well by pausing the <video>
+	    // element, then stopping each of the getUserMedia() tracks
+	    // on it.
+	    if (localVideo.srcObject) {
+	      localVideo.pause();
+	      localVideo.srcObject.getTracks().forEach(track => {
+	        track.stop();
+	      });
+	    }
+	
+	    // Close the peer connection
+	    myPeerConnection.close();
+	    myPeerConnection = null;
+	    webcamStream = null;
+  	}
 
-  if (myPeerConnection) {
-    log("--> Closing the peer connection");
-
-    // Disconnect all our event listeners; we don't want stray events
-    // to interfere with the hangup while it's ongoing.
-
-    myPeerConnection.ontrack = null;
-    myPeerConnection.onicecandidate = null;
-    myPeerConnection.oniceconnectionstatechange = null;
-    myPeerConnection.onsignalingstatechange = null;
-    myPeerConnection.onicegatheringstatechange = null;
-    myPeerConnection.onnegotiationneeded = null;
-
-    // Stop all transceivers on the connection
-
-    myPeerConnection.getTransceivers().forEach(transceiver => {
-      transceiver.stop();
-    });
-
-    // Stop the webcam preview as well by pausing the <video>
-    // element, then stopping each of the getUserMedia() tracks
-    // on it.
-
-    if (localVideo.srcObject) {
-      localVideo.pause();
-      localVideo.srcObject.getTracks().forEach(track => {
-        track.stop();
-      });
-    }
-
-    // Close the peer connection
-
-    myPeerConnection.close();
-    myPeerConnection = null;
-    webcamStream = null;
-  }
-
-  // Disable the hangup button
-
-  document.getElementById("hangup-button").disabled = true;
-  document.getElementById("mute-button").disabled = true;
-  document.getElementById("mute-button").textContent = "🎤 마이크 끄기";
-  document.getElementById("video-button").disabled = true;
-  document.getElementById("video-button").textContent = "📷 카메라 끄기";
-  targetUsername = null;
+	// Disable the hangup button
+	document.getElementById("hangup-button").disabled = true;
+	document.getElementById("mute-button").disabled = true;
+	document.getElementById("mute-button").textContent = "🎤 마이크 끄기";
+	document.getElementById("video-button").disabled = true;
+	document.getElementById("video-button").textContent = "📷 카메라 끄기";
+	targetUsername = null;
 }
 
+// 오디오 활성/비활성 토글 
 function toggleAudio() {
-  if (!webcamStream) return;
-  const audioTrack = webcamStream.getAudioTracks()[0];
-  if (!audioTrack) return;
+    // 1. 활성 통화 없으면 종료
+    if (!audioTransceiver) return;
 
-  audioTrack.enabled = !audioTrack.enabled;
-  document.getElementById("mute-button").textContent = audioTrack.enabled ? "🎤 마이크 끄기" : "🔇 마이크 켜기";
+    // 2. 현재 마이크를 보내고 있는 상태인가? (참고: transceiver.direction 의 상태 4가지: sendonly, recvonly, sendrecv, inactive)
+    const isSending = audioTransceiver.direction === 'sendrecv' 
+                   || audioTransceiver.direction === 'sendonly'; 
+
+    // 3. 반대 방향으로 전환
+    audioTransceiver.direction = isSending ? 'recvonly' : 'sendrecv';
+
+    // 4. 버튼 텍스트 업데이트
+    document.getElementById("mute-button").textContent 
+        = isSending ? "🔇 마이크 켜기" : "🎤 마이크 끄기";
 }
 
+// 비디오 활성/비활성 토글 
 function toggleVideo() {
-  if (!webcamStream) return;
-  const videoTrack = webcamStream.getVideoTracks()[0];
-  if (!videoTrack) return;
-
-  videoTrack.enabled = !videoTrack.enabled;
-  document.getElementById("video-button").textContent = videoTrack.enabled ? "📷 카메라 끄기" : "🚫 카메라 켜기";
+	if (!videoTransceiver) return;
+	const isSending = videoTransceiver.direction === 'sendrecv' || videoTransceiver.direction === 'sendonly';
+	videoTransceiver.direction = isSending ? 'recvonly' : 'sendrecv';
+	document.getElementById("video-button").textContent = isSending ? "🚫 카메라 켜기" : "📷 카메라 끄기";
 }
 
 // Handle the "hang-up" message, which is sent if the other peer
 // has hung up the call or otherwise disconnected.
-
 function handleHangUpMsg(msg) {
-  log("*** Received hang up notification from other peer");
   closeVideoCall();
 }
 
@@ -556,55 +441,44 @@ function handleHangUpMsg(msg) {
 // the signaling is done on a different connection). This notifies
 // the other peer that the connection should be terminated and the UI
 // returned to the "no call in progress" state.
-
 function hangUpCall() {
-  closeVideoCall();
-
   sendToServer({
     name: myUsername,
     target: targetUsername,
     type: "hang-up"
   });
+  closeVideoCall();
 }
 
-// Handle a click on an item in the user list by inviting the clicked
-// user to video chat. Note that we don't actually send a message to
-// the callee here -- calling RTCPeerConnection.addTrack() issues
-// a |notificationneeded| event, so we'll let our handler for that
-// make the offer.
-
+// 설명: 타겟사용자명 클릭시 발생하는 이벤트. 미팅을 시작하는 메서드. 
+// 주요동작: 
+// 1) 타겟사용자명 변수값 저장
+// 2) createPeerConnection() 호출하여 WebRTC연결객체 생성 -> trigger onicecandidate event (webRTC연결객체를 생성하면서 ice candidate가 찾아짐) -> "new-ice-candidate" 메세지 서버 전송
+// 3) 웹캠 데이터 스트림 가져오기, 화면의 프리뷰 영상 요소에 데이터 스트림 연결 
+// 4) myPeerConnection.addTrack() 호출하여 웹캠 데이터 스트림을 WebRTC연결객체에 연결 -> trigger onnegotitationneeded event -> offer sdp 생성하여 이를 "video-offer" 메세지로 구성해 서버 전송
 async function invite(evt) {
-  console.log("=========> invite");
-  // log("=== WEBRTC CLIENT: Starting video call invitation ===");
-  // log("Starting to prepare an invitation");
-  if (myPeerConnection) {
-    alert("You can't start a call because you already have one open!");
-  } else {
-    var clickedUsername = evt.target.textContent;
-
-    // Don't allow users to call themselves, because weird.
-
+	// 중복 연결 시도 검증
+	if (myPeerConnection) {
+		alert("You can't start a call because you already have one open!");
+		return;
+	} 
+	
+	// 클릭된 사용자명 가져오기
+    const clickedUsername = evt.target.textContent;
+	
+	// 자기 자신 연결 검증
     if (clickedUsername === myUsername) {
       alert("I'm afraid I can't let you talk to yourself. That would be weird.");
       return;
     }
-
-    // Record the username being called for future reference
-
+	
+	// 타겟사용자명 저장
     targetUsername = clickedUsername;
-    // log("Inviting user " + targetUsername);
-
-    // Call createPeerConnection() to create the RTCPeerConnection.
-    // When this returns, myPeerConnection is our RTCPeerConnection
-    // and webcamStream is a stream coming from the camera. They are
-    // not linked together in any way yet.
-
-    // log("Setting up connection to invite user: " + targetUsername);
+	
+	// WebRTCPeerConnection 객체 생성
     await createPeerConnection();
 
-    // Get access to the webcam stream and attach it to the
-    // "preview" box (id "local_video").
-
+	// 웹캠 데이터 스트림 가져오기, video요소에 연결
     try {
       webcamStream = await navigator.mediaDevices.getUserMedia(mediaConstraints);
       document.getElementById("local_video").srcObject = webcamStream;
@@ -613,124 +487,112 @@ async function invite(evt) {
 	  return;
     }
 
-    // Add the tracks from the stream to the RTCPeerConnection
-
+    // 웹캠 데이터 스트림 WebRTCPeerConnection에 연결
     try {
       webcamStream.getTracks().forEach(track => {
-        myPeerConnection.addTransceiver(track, {streams: [webcamStream]});
+        const tc = myPeerConnection.addTransceiver(track, {streams: [webcamStream]});
+		if (track.kind === 'audio') audioTransceiver = tc;
+		else videoTransceiver = tc
       });
     } catch(err) {
       handleGetUserMediaError(err);
+	  return;
     }
-  }
 }
 
-// Accept an offer to video chat. We configure our local settings,
-// create our RTCPeerConnection, get and attach our local camera
-// stream, then create and send an answer to the caller.
-
+/**
+ * "video-offer" 메세지 헨들러
+ * 주요동작:
+ * 1) 타겟사용자명 변수값 저장
+ * 2) createPeerConnection() 호출하여 WebRTC연결객체 생성 -> trigger onicecandidate event (webRTC연결객체를 생성하면서 ice candidate가 찾아짐) -> "new-ice-candidate" 메세지 서버 전송
+ * 3) remote sdp 등록
+ * 4) 웹캠 데이터 스트림 가져오기, 화면의 프리뷰 영상 요소에 데이터 스트림 연결 
+ * 5) myPeerConnection.addTrack() 호출하여 웹캠 데이터 스트림을 WebRTC연결객체에 연결 -> answer sdp 생성하여 이를 "video-answer" 메세지로 구성해 서버 전송
+ */
 async function handleVideoOfferMsg(msg) {
-  const endEventLog = eventLog("handleVideoOfferMsg");
-  targetUsername = msg.name;
+	// 타겟사용자명 저장
+	targetUsername = msg.name;
+	
+	// WebRTCPeerConnection 객체 생성
+	if (!myPeerConnection) {
+		await createPeerConnection();
+	}
+	
+	// 원격 sdp 지정 -> 그래야 로컬 webRTC 레이어가 caller와 어떻게 연결할지 알 수 있음 
+	const desc = new RTCSessionDescription(msg.sdp);
+	
+	// 만약 로컬의 signalingState가 "stable"이 아닌 경우 ("has-remote-sdp", "has-local-sdp", "closed" 일수 있음) -> 즉 앞서서 연결이 시도된 흔적이 남아있는 경우
+	// signaling state를 초기화(rollback to stable) 시켜주고, 지금 막 새로들어온 remote sdp를 등록해주는 동작이다.
+  	if (myPeerConnection.signalingState != "stable") {
+	    await Promise.all([
+	      myPeerConnection.setLocalDescription({type: "rollback"}), // signaling state를 초기화(rollback to stable) 
+	      myPeerConnection.setRemoteDescription(desc) // remote sdp를 등록
+	    ]);
+		return;
+  	} 
+	// 이미"stable" 상태일 경우엔 바로 remote sdp를 등록해주기
+  	else {
+		await myPeerConnection.setRemoteDescription(desc);
+	}
+	
+	// 초기 연결 시에만 webcam 취득 및 트랙 등록 (재협상 시에는 생략 — 기존 트랜시버를 재사용)
+	if (!webcamStream) {
+		try {
+			webcamStream = await navigator.mediaDevices.getUserMedia(mediaConstraints);
+			document.getElementById("local_video").srcObject = webcamStream;
+		} catch(err) {
+			handleGetUserMediaError(err);
+			return;
+		}
 
-  // If we're not already connected, create an RTCPeerConnection
-  // to be linked to the caller.
-  if (!myPeerConnection) {
-    log("- createPeerConnection");
-    await createPeerConnection();
-  }
+		try {
+			webcamStream.getTracks().forEach(track => {
+				const sender = myPeerConnection.addTrack(track, webcamStream);  // 중요) callee 측에서는 반드시 addTrack 을 사용해야함. 왜냐하면, caller 측에서 이미 webrtc연결에 transceiver를 등록했기 때문
+				const tc = myPeerConnection.getTransceivers().find(t => t.sender === sender)
+				if(track.kind === 'audio') audioTransceiver = tc;
+				else videoTransceiver = tc;
+			});
+		} catch(err) {
+			handleGetUserMediaError(err);
+		}
+	}
 
-  // We need to set the remote description to the received SDP offer
-  // so that our local WebRTC layer knows how to talk to the caller.
-  
-  log("- create new RTCSessionDescription");
-  var desc = new RTCSessionDescription(msg.sdp);
-
-  // If the connection isn't stable yet, wait for it...
-
-  if (myPeerConnection.signalingState != "stable") {
-    log("- signaling state isn't stable, so triggering rollback");
-
-    // Set the local and remote descriptions for rollback; don't proceed
-    // until both return.
-    await Promise.all([
-      myPeerConnection.setLocalDescription({type: "rollback"}),
-      myPeerConnection.setRemoteDescription(desc)
-    ]);
-	endEventLog();
-	return;
-  } 
-  else {
-    log("- set remote description");
-    await myPeerConnection.setRemoteDescription(desc);
-  }
-
-  // Get the webcam stream if we don't already have it
-
-  if (!webcamStream) {
-    try {
-		log("- getUserMedia");
-		webcamStream = await navigator.mediaDevices.getUserMedia(mediaConstraints);
-    } catch(err) {
-      handleGetUserMediaError(err);
-	  endEventLog();
-      return;
-    }
-
-    document.getElementById("local_video").srcObject = webcamStream;
-
-    // Add the camera stream to the RTCPeerConnection
-
-    try {
-	      log("- add transceiver");
-	      /* webcamStream.getTracks().forEach(
-	        transceiver = track => myPeerConnection.addTransceiver(track, {streams: [webcamStream]})
-	      ); */
-	      webcamStream.getTracks().forEach(track => {
-			  myPeerConnection.addTrack(track, webcamStream);
-			}); 
-    } catch(err) {
-      handleGetUserMediaError(err);
-    }
-  }
-
-  log("- create answer and set local description");
-  makingAnswer = true;
-  await myPeerConnection.setLocalDescription(await myPeerConnection.createAnswer());
-
-  sendToServer({
-    name: myUsername,
-    target: targetUsername,
-    type: "video-answer",
-    sdp: myPeerConnection.localDescription
-  });
-  makingAnswer = false;
-
-  endEventLog();
+	// video-answer 생성중 여부 플래그 -> addTrack으로 인한 onnegotiationneeded event 헨들러 내부에서 사용됨. video-offer 재전송을 방지
+	makingAnswer = true;
+  	
+	// 로컬 sdp 생성
+	await myPeerConnection.setLocalDescription(await myPeerConnection.createAnswer());
+	
+	// "video-answer" 메세지 서버 전송
+	sendToServer({
+		name: myUsername,
+	    target: targetUsername,
+	    type: "video-answer",
+	    sdp: myPeerConnection.localDescription
+	});
+	
+	// video-answer 생성종료
+	makingAnswer = false;
 }
 
-// Responds to the "video-answer" message sent to the caller
-// once the callee has decided to accept our request to talk.
-
+/**
+ * "video-answer" 메세지 헨들러
+ * 주요동작:
+ * 1) remote sdp 등록
+ */
 async function handleVideoAnswerMsg(msg) {
-  const endEventLog = eventLog("handleVideoAnswerMsg");
-
-  // Configure the remote description, which is the SDP payload
-  // in our "video-answer" message.
-  
-  log("- set remote description");
+  // remote sdp를 등록해주기 (video-offer를 보낸 후 응답으로 video-answer가 오기 때문에 이시점에 signaling state는 항상 "has-local-sdp"이기에 상태 검증 생략)
   var desc = new RTCSessionDescription(msg.sdp);
   await myPeerConnection.setRemoteDescription(desc).catch(reportError);
-  endEventLog();
 }
 
-// A new ICE candidate has been received from the other peer. Call
-// RTCPeerConnection.addIceCandidate() to send it along to the
-// local ICE framework.
-
+/**
+ * "new-ice-candidate" 메세지 헨들러
+ */
 async function handleNewICECandidateMsg(msg) {
-  const endEventLog = eventLog("handleNewICECandidateMsg");
+  // 새로운 ice 후보객체 생성
   var candidate = new RTCIceCandidate(msg.candidate);
+  
   try {
 	log("- add received ICE candidate: " + JSON.stringify(candidate));
 	remoteICECandidates.push(candidate);
@@ -739,7 +601,6 @@ async function handleNewICECandidateMsg(msg) {
     reportError(err);
     log("- Failed to add ICE candidate to peer connection");
   }
-  endEventLog();
 }
 
 // Handle errors which occur when trying to access the local media
@@ -748,7 +609,6 @@ async function handleNewICECandidateMsg(msg) {
 // or that they declined to share their equipment when prompted. If
 // they simply opted not to share their media, that's not really an
 // error, so we won't present a message in that situation.
-
 function handleGetUserMediaError(e) {
   log_error(e);
   switch(e.name) {
@@ -764,17 +624,15 @@ function handleGetUserMediaError(e) {
       alert("Error opening your camera and/or microphone: " + e.message);
       break;
   }
-
+  
   // Make sure we shut down our end of the RTCPeerConnection so we're
   // ready to try again.
-
   closeVideoCall();
 }
 
 // Handles reporting errors. Currently, we just dump stuff to console but
 // in a real-world application, an appropriate (and user-friendly)
 // error message should be displayed.
-
 function reportError(errMessage) {
   log_error(`Error ${errMessage.name}: ${errMessage.message}`);
 }

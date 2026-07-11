@@ -40,22 +40,7 @@ async function handleLogin(event) {
 
     // 2. 응답 처리
     const data = await response.json();
-
-	/* type 1) 로컬스토리지에 저장하는 방식 
-	if (response.ok && data.token) {
-	      // 성공: JWT 토큰을 로컬 스토리지에 저장
-		  localStorage.setItem('jwtToken', data.token);
-	      localStorage.setItem('username', data.username);
-	      console.log('[login.js] 로그인 성공:', data.username);
-		  
-	      // chat.html로 리다이렉트 (약간의 딜레이 후)
-	      setTimeout(() => {
-	        	window.location.href = 'chat.html';
-	      }, 300);
-	 }
-	 */
-	/* type 2) 로컬스토리지에 저장하지 않는 방식 */
-	debugger;
+	
 	if(response.ok && data.username) {
 		console.log('[login.js] 로그인 성공:', data.username);
 		sessionStorage.setItem('username', data.username);
@@ -78,12 +63,3 @@ async function handleLogin(event) {
     loginBtn.textContent = '🔐 로그인';
   }
 }
-
-// 페이지 로드 시: 이미 로그인되어 있으면 chat.html로 리다이렉트
-/* window.addEventListener('DOMContentLoaded', () => {
-  const token = localStorage.getItem('jwtToken');
-  if (token) {
-    console.log('[login.js] 이미 로그인 상태이므로 chat.html로 리다이렉트합니다.');
-    window.location.href = 'chat.html';
-  }
-}); */
