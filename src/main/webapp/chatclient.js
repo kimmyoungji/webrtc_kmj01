@@ -8,48 +8,39 @@
 //
 // Any copyright is dedicated to the Public Domain.
 // http://creativecommons.org/publicdomain/zero/1.0/
+//
+// modified by myoungjikim and claude - 2026.03 ~ 2026.09
 
 "use strict";
 
-// Get our hostname
+// hostname
 var myHostname = window.location.hostname;
 if (!myHostname) myHostname = "localhost";
 
-// Save native getStats before adapter.js shims it
+// adapter.js가 덮어쓰기 이전 브라우저의 원래 getStats 함수가져오기 (adapter.js의 getStats는 내부적으로 수정될 우려가 있음)
 const _nativeGetStats = RTCPeerConnection.prototype.getStats;
 
-// WebSocket chat/signaling channel variables.
-var connection = null;
-var clientID = 0;
-var accessToken = null;
 
-// The media constraints object describes what sort of stream we want
-// to request from the local A/V hardware (typically a webcam and
-// microphone). Here, we specify only that we want both audio and
-// video; however, you can be more specific. It's possible to state
-// that you would prefer (or require) specific resolutions of video,
-// whether to prefer the user-facing or rear-facing camera (if available),
-// and so on.
-//
-// See also:
-// https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamConstraints
-// https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
-//
+
+// Audio/Visual 하드웨어 데이터 스트림 설정
 var mediaConstraints = {
-  audio: true,            // We want an audio track
+  audio: true,   
   video: {
     aspectRatio: {
-      ideal: 1.333333     // 3:2 aspect is preferred
+      ideal: 1.333333
     }
   }
 };
 
 var myUsername = null;
-var targetUsername = null;      // To store username of other peer
-var myPeerConnection = null;    // RTCPeerConnection
-var transceiver = null;         // RTCRtpTransceiver
-var webcamStream = null;        // MediaStream from webcam
-var makingAnswer = false;       // Flag to track if we're currently creating an answer
+var targetUsername = null;      
+
+var connection = null;  	 // websocket 연결 객체 저장 변수
+var myPeerConnection = null; // webrtc 연결 객체 저장 변수
+var transceiver = null;		 // 
+var webcamStream = null;        
+
+var makingAnswer = false;       
 var localICECandidates = [];
 var remoteICECandidates = [];
 
@@ -85,7 +76,9 @@ function log_error(text) {
  * 페이지 로드 시 자동으로 WebSocket 연결 수립
  * 사전 조건: chat.html에서 이미 로드됨, auth.js를 통해 토큰 확인됨
  */
-window.addEventListener('DOMContentLoaded', () => {
+
+/* type1 */
+/* window.addEventListener('DOMContentLoaded', () => {
   const token = localStorage.getItem('jwtToken');
   if (token) {
     log('자동으로 WebSocket 연결을 시작합니다...');
@@ -94,6 +87,11 @@ window.addEventListener('DOMContentLoaded', () => {
     log_error('JWT 토큰이 없습니다. 로그인 페이지로 이동합니다.');
     window.location.href = 'login.html';
   }
+}); */
+
+/* type2 */
+window.addEventListener('DOMContentLoaded', () => {
+  connect();  // 쿠키는 브라우저가 자동 전송 → 인증 실패 시 onclose에서 처리
 });
 
 // Send a JavaScript object by converting it to JSON and sending
@@ -110,7 +108,9 @@ function sendToServer(msg) {
 // 페이지 로드 시 자동으로 호출되거나, 재연결 시 호출됨
 function connect() {
   // localStorage에서 JWT 토큰 가져오기
-  const token = localStorage.getItem('jwtToken');
+  
+  // type1
+  /* const token = localStorage.getItem('jwtToken');
   if (!token) {
     log_error('JWT 토큰이 없습니다. 로그인 페이지로 이동합니다.');
     window.location.href = 'login.html';
@@ -118,7 +118,10 @@ function connect() {
   }
 
   accessToken = token;
-  myUsername = localStorage.getItem('username');
+  myUsername = localStorage.getItem('username'); */
+  
+  //type2
+  const myUsername = sessionStorage.getItem('username');
 
   var serverUrl;
   var scheme = "ws";
@@ -136,7 +139,15 @@ function connect() {
   //   예) /webrtc_kmj01-1.0.0/           → /webrtc_kmj01-1.0.0
   //   예) / (ROOT 배포)                  → "" (빈 문자열, 그대로 동작)
   var contextPath = window.location.pathname.replace(/\/[^/]*$/, "");
-  serverUrl = scheme + "://" + window.location.host + contextPath + "/ws?token=" + encodeURIComponent(accessToken);
+  
+  debugger;
+  
+  // type1
+  // serverUrl = scheme + "://" + window.location.host + contextPath + "/ws?token=" + encodeURIComponent(accessToken);
+  // type2
+  serverUrl = scheme + "://" + window.location.host + contextPath + "/ws"
+  
+  debugger;
 
   connection = new WebSocket(serverUrl);
 
@@ -156,10 +167,8 @@ function connect() {
     
     // 토큰 관련 오류 처리
     if (evt.code === 1002 || evt.reason === 'Invalid token' || evt.reason === 'Username already in use') {
-      localStorage.removeItem('jwtToken');
-      localStorage.removeItem('username');
       alert('연결이 종료되었습니다: ' + evt.reason + '\n다시 로그인해주세요.');
-      window.location.href = 'login.html';
+      performLogout(true);
     } else if (evt.reason) {
       alert('WebSocket 연결이 종료되었습니다: ' + evt.reason);
     }
@@ -175,27 +184,6 @@ function connect() {
     // var timeStr = time.toLocaleTimeString();
 
     switch(msg.type) {
-      case "id":
-        log("2) Received ID sent from signaling server: " + msg.id);
-        clientID = msg.id;
-        break;
-
-      /* case "username":
-        log("4) User signed in: " + msg.name + " at " + timeStr);
-        text = "<b>User <em>" + msg.name + "</em> signed in at " + timeStr + "</b><br>";
-        alert(text);
-        break; */
-
-      /* case "message":
-        text = "(" + timeStr + ") <b>" + msg.name + "</b>: " + msg.text + "<br>";
-        break; */
-
-      case "rejectusername":
-        myUsername = msg.name;
-        text = "<b>Your username has been set to <em>" + myUsername +
-          "</em> because the name you chose is in use.</b><br>";
-        alert(text);
-        break;
 
       case "userlist":      // Received an updated user list
         handleUserlistMsg(msg);
@@ -280,7 +268,7 @@ async function createPeerConnection() {
   log("- Creating PeerConnection with dynamic ICE servers");
   myPeerConnection = new RTCPeerConnection({
     iceServers: [
-      // s{ urls: "stun:stun.l.google.com:19302" },
+      // { urls: "stun:stun.l.google.com:19302" },
       ...credData.iceServers
     ]
   });
@@ -707,15 +695,17 @@ async function handleVideoOfferMsg(msg) {
   }
 
   log("- create answer and set local description");
+  makingAnswer = true;
   await myPeerConnection.setLocalDescription(await myPeerConnection.createAnswer());
-  
+
   sendToServer({
     name: myUsername,
     target: targetUsername,
     type: "video-answer",
     sdp: myPeerConnection.localDescription
   });
-  
+  makingAnswer = false;
+
   endEventLog();
 }
 

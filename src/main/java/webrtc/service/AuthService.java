@@ -50,7 +50,10 @@ public class AuthService {
         
         // 사용자 조회
         User user = userMapper.selectUserByUsername(username);
-        
+        if (user == null) {
+            return false;
+        }
+
         // 비밀번호 검증
         return BCrypt.checkpw(password, user.getPassword());
     }

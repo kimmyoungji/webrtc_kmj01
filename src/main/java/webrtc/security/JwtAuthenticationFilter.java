@@ -1,14 +1,16 @@
 package webrtc.security;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.web.filter.OncePerRequestFilter;
+import java.io.IOException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 /**
  * JWT 인증 필터
@@ -26,9 +28,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String requestPath = request.getRequestURI();
         String method = request.getMethod();
 
-        // 로그인 요청은 검증 제외
-        if ((requestPath.contains("/api/login") || requestPath.contains("/api/register")) && "POST".equals(method)) {
-            log.debug("로그인 요청이므로 필터 스킵: {}", requestPath);
+        // 인증 불필요 요청은 검증 제외
+        if ("POST".equals(method) && (requestPath.contains("/api/login")
+                || requestPath.contains("/api/register")
+                || requestPath.contains("/api/logout"))) {
+            log.debug("인증 불필요 요청이므로 필터 스킵: {}", requestPath);
             filterChain.doFilter(request, response);
             return;
         }
@@ -42,7 +46,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // /api 요청에 대해서만 JWT 검증
         if (requestPath.contains("/api")) {
-            String authHeader = request.getHeader("Authorization");
+        	
+        	/* 1) Header Authorization 속성에 담아오는 방식
+        	String authHeader = request.getHeader("Authorization");
 
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
                 log.warn("Authorization 헤더가 없거나 형식이 잘못됨: {}", requestPath);
@@ -50,9 +56,29 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 response.setContentType("application/json;charset=UTF-8");
                 response.getWriter().write("{\"valid\": false, \"message\": \"Authorization 헤더가 없습니다.\"}");
                 return;
-            }
-
+            } 
             String token = authHeader.substring("Bearer ".length()).trim();
+            */
+        	
+        	/* 2) Cookie에서 추출하는 방식 */
+        	String token = null;
+        	Cookie[] cookies = request.getCookies();
+        	if (cookies != null) {
+        	    for (Cookie cookie : cookies) {
+        	        if ("jwt".equals(cookie.getName())) {
+        	            token = cookie.getValue();
+        	            break;
+        	        }
+        	    }
+        	}
+        	
+        	// 빈 토큰 검증
+        	if (token == null || token.isBlank()) {
+        	    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        	    response.setContentType("application/json;charset=UTF-8");
+        	    response.getWriter().write("{\"valid\": false, \"message\": \"인증 쿠키가 없습니다.\"}");
+        	    return;
+        	}
 
             // JWT 검증
             if (!JwtUtil.validateToken(token)) {

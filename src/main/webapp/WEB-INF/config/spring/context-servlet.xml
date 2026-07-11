@@ -33,7 +33,11 @@
     <!-- 4) WebSocket 핸들러 등록 -->
     <websocket:handlers>
         <websocket:mapping path="/ws" handler="signalingHandler"/>
+        <websocket:handshake-interceptors>
+        	<ref bean="cookieHandShakeIntorceptor" />
+        </websocket:handshake-interceptors>
     </websocket:handlers>
     <bean id="signalingHandler" class="webrtc.handler.SignalingHandler"/>
+    <bean id="cookieHandShakeIntorceptor" class="webrtc.interceptor.CookieHandShakeInterceptor" />
 
 </beans>

@@ -13,19 +13,10 @@
 </head>
 <body>
   <!-- 로그아웃 버튼 -->
-  <button id="logout-button" onclick="logout()" style="position: fixed; top: 20px; right: 20px; z-index: 1000; background: #ef4444; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer;">
+  <button id="logout-button" onclick="performLogout()" style="position: fixed; top: 20px; right: 20px; z-index: 1000; background: #ef4444; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer;">
     🚪 로그아웃
   </button>
 
-  <script>
-    function logout() {
-      if (confirm('로그아웃하시겠습니까?')) {
-        localStorage.removeItem('jwtToken');
-        localStorage.removeItem('username');
-        window.location.href = 'login.html';
-      }
-    }
-  </script>
   <div class="container">
     <div class="infobox">
       <h1>

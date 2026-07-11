@@ -40,7 +40,7 @@ public class SignalingHandler extends TextWebSocketHandler {
     private final Map<String, String> usernames = new ConcurrentHashMap<>();
 
     /** 원본 JS의 nextID = Date.now() 와 동일한 방식으로 초기화 */
-    private final AtomicLong nextId = new AtomicLong(System.currentTimeMillis());
+    /* private final AtomicLong nextId = new AtomicLong(System.currentTimeMillis()); */
 
     // ──────────────────────────────────────────────────────────────────────────
     // 연결 수립
@@ -50,13 +50,17 @@ public class SignalingHandler extends TextWebSocketHandler {
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         log.info(session.getUri().toString());
 
-        String token = extractToken(session);
+        // jwt 토큰 가져오기
+        String token = (String) session.getAttributes().get("ACCESS_TOKEN");
+        
+        // jwt 토큰 검증
         if (token == null || token.isEmpty() || !JwtUtil.validateToken(token)) {
             log.warn("Connection rejected: invalid or missing JWT token");
             session.close(CloseStatus.NOT_ACCEPTABLE.withReason("Invalid token"));
             return;
         }
-
+        
+        // jwt 토큰에서 사용자명 가져오기
         String username = JwtUtil.getUsernameFromToken(token);
         if (username == null || username.isEmpty()) {
             log.warn("Connection rejected: JWT token does not contain username");
@@ -64,25 +68,21 @@ public class SignalingHandler extends TextWebSocketHandler {
             return;
         }
 
+        // 이미 미팅에 연결된 사용자인지 확인
         if (isUsernameTaken(username)) {
             log.warn("Connection rejected: username already in use - {}", username);
             session.close(CloseStatus.POLICY_VIOLATION.withReason("Username already in use"));
             return;
         }
 
+        // 연결 요청 사용자의 세션객체와 사용자명을 기억
         sessions.put(session.getId(), session);
         usernames.put(session.getId(), username);
         session.getAttributes().put("jwtUsername", username);
 
         log.info("server-1) Connection accepted: {} (total={})", session.getRemoteAddress(), sessions.size());
 
-        long clientId = nextId.getAndIncrement();
-        ObjectNode idMsg = mapper.createObjectNode();
-        idMsg.put("type", "id");
-        idMsg.put("id", clientId);
-        session.sendMessage(new TextMessage(mapper.writeValueAsString(idMsg)));
-        log.info("server-2) Sent ID {} to new client", clientId);
-
+        // 새로 추가된 사용자가 포함된 사용자명 목록 브로드캐스팅
         sendUserListToAll();
     }
 
@@ -97,20 +97,13 @@ public class SignalingHandler extends TextWebSocketHandler {
         String type = msg.has("type") ? msg.get("type").asText() : "";
 
         switch (type) {
-
-            // 사용자 이름 등록 (원본 server-3, server-4 단계)
-            case "username":
-                handleUsername(session, msg);
-                break;
-
-            // 그 외 메시지(video-offer, video-answer, new-ice-candidate, hang-up)
             // → target 이 지정된 경우에만 해당 사용자에게 1:1 라우팅
             default:
                 String target = msg.has("target") ? msg.get("target").asText() : "";
                 if (!target.isEmpty()) {
                     log.info("server-5) Routing '{}' to target: {}", type, target);
                     log.info(message.getPayload());
-                    sendToUser(target, message.getPayload());
+                    sendToOneUser(target, message.getPayload());
                 }
                 break;
         }
@@ -136,74 +129,16 @@ public class SignalingHandler extends TextWebSocketHandler {
     // ──────────────────────────────────────────────────────────────────────────
     // 내부 헬퍼
     // ──────────────────────────────────────────────────────────────────────────
-
-    /**
-     * 사용자 이름 등록 처리.
-     * 중복이면 숫자를 붙여 고유하게 만든 뒤 rejectusername 메시지로 알린다.
-     */
-    private void handleUsername(WebSocketSession session, ObjectNode msg) throws Exception {
-        log.info("server-3) Processing username change");
-        String requested = msg.has("name") ? msg.get("name").asText() : "";
-        String jwtUsername = (String) session.getAttributes().get("jwtUsername");
-
-        if (jwtUsername != null && !jwtUsername.isEmpty()) {
-            if (!jwtUsername.equals(requested)) {
-                ObjectNode rejectMsg = mapper.createObjectNode();
-                rejectMsg.put("id", msg.has("id") ? msg.get("id").asLong() : 0);
-                rejectMsg.put("type", "rejectusername");
-                rejectMsg.put("name", jwtUsername);
-                session.sendMessage(new TextMessage(mapper.writeValueAsString(rejectMsg)));
-            }
-            usernames.put(session.getId(), jwtUsername);
-            log.info("server-4) Username registered from JWT: {} → {}", session.getId(), jwtUsername);
-            sendUserListToAll();
-            return;
-        }
-
-        String finalName = requested;
-        int suffix = 1;
-
-        while (isUsernameTaken(finalName)) {
-            finalName = requested + suffix++;
-        }
-
-        if (!finalName.equals(requested)) {
-            ObjectNode rejectMsg = mapper.createObjectNode();
-            rejectMsg.put("id", msg.has("id") ? msg.get("id").asLong() : 0);
-            rejectMsg.put("type", "rejectusername");
-            rejectMsg.put("name", finalName);
-            session.sendMessage(new TextMessage(mapper.writeValueAsString(rejectMsg)));
-        }
-
-        usernames.put(session.getId(), finalName);
-        log.info("server-4) Username registered: {} → {}", session.getId(), finalName);
-        sendUserListToAll();
-    }
-
     /** 해당 이름이 이미 등록되어 있는지 확인 */
     private boolean isUsernameTaken(String name) {
         return usernames.containsValue(name);
-    }
-
-    private String extractToken(WebSocketSession session) {
-        if (session.getUri() == null || session.getUri().getQuery() == null) {
-            return null;
-        }
-
-        String query = session.getUri().getQuery();
-        for (String param : query.split("&")) {
-            if (param.startsWith("token=")) {
-                return URLDecoder.decode(param.substring("token=".length()), StandardCharsets.UTF_8);
-            }
-        }
-        return null;
     }
 
     /**
      * 특정 사용자에게 메시지를 전송.
      * 원본의 sendToOneUser() 와 동일.
      */
-    private void sendToUser(String username, String msgString) throws Exception {
+    private void sendToOneUser(String username, String msgString) throws Exception {
         for (Map.Entry<String, String> entry : usernames.entrySet()) {
             if (entry.getValue().equals(username)) {
                 WebSocketSession target = sessions.get(entry.getKey());
@@ -213,7 +148,7 @@ public class SignalingHandler extends TextWebSocketHandler {
                 return;
             }
         }
-        log.warn("sendToUser: user '{}' not found", username);
+        log.warn("sendToOneUser: user '{}' not found", username);
     }
 
     /**
